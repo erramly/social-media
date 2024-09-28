@@ -1,18 +1,23 @@
-import "./bootstrap";
+import './bootstrap';
+import '../css/app.css';
 
-import { createApp } from "vue/dist/vue.esm-bundler.js";
+import { createApp, h } from 'vue';
+import { createInertiaApp } from '@inertiajs/vue3';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 
-import routes from "./router/route";
-import { createRouter, createWebHistory  } from "vue-router";
+const appName = import.meta.env.VITE_APP_NAME || 'fc-az';
 
-import App from "./app.vue";
-
-
-const router = createRouter({
-    history: createWebHistory(),
-    routes: routes,
+createInertiaApp({
+    title: (title) => `${title} - ${appName}`,
+    resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
+    setup({ el, App, props, plugin }) {
+        return createApp({ render: () => h(App, props) })
+            .use(plugin)
+            .use(ZiggyVue)
+            .mount(el);
+    },
+    progress: {
+        color: '#4B5563',
+    },
 });
-
-
-const app = createApp(App);
-app.use(router).mount("#app");

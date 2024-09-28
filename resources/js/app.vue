@@ -4,7 +4,7 @@
     </div>
 </template>
 <script>
-import chaild from "./components/login.vue";
+import chaild from "./components/logingggggg.vue";
 export default {
     components: {
         chaild,
