@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('likes', function (Blueprint $table) {
             $table->id(); // Primary key, auto-increment
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Foreign key to users, cascade on delete
-            $table->string('title'); // Post title
-            $table->text('content'); // Post content
-            $table->string('image')->nullable(); // Optional image
-            $table->string('video')->nullable(); // Optional video
+            $table->foreignId('post_id')->constrained('posts')->onDelete('cascade'); // Foreign key to posts, cascade on delete
             $table->timestamps(); // created_at and updated_at fields
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('likes');
     }
 };

@@ -1,8 +1,12 @@
 <?php
 
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\FriendController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +38,30 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::get("/",function ()  {
-    return Inertia::render("Home");
+
+Route::get('/', [PostController::class, 'index'])->middleware("auth.redirect");
+
+Route::post('/posts-create', [PostController::class, "store"]);
+
+
+
+// Route::middleware('auth:sanctum')->group(function () {
+//     Route::post('/friend-request/send/{id}', [FriendController::class, 'sendRequest']);
+//     Route::post('/friend-request/accept/{id}', [FriendController::class, 'acceptRequest']);
+//     Route::post('/friend-request/decline/{id}', [FriendController::class, 'declineRequest']);
+//     Route::get('/friends-request', [FriendController::class, 'getOrdersFreids']);
+// });
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/friend-request/accept', [FriendController::class, 'acceptRequest']);
+});
+
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/like/add', [LikeController::class, 'store']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/comment/add', [CommentController::class, 'store']);
 });

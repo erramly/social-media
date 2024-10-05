@@ -1,10 +1,47 @@
 <script setup>
+import { ref } from "vue";
+import { useForm } from "@inertiajs/vue3";
+
+// نموذج Inertia
+const form = useForm({
+    title: "",
+    content: "",
+    image: null, 
+});
+
+const imgPreview = ref(null);
+
+const submit = () => {
+    form.post("posts-create", {
+        onSuccess: () => {
+            close();
+        },
+    });
+};
+
 const emit = defineEmits(["close"]);
 
 const close = () => {
     emit("close");
 };
+
+function previewImage(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            imgPreview.value.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+        form.image = file; 
+    }
+}
+
+function activeinpute() {
+    document.getElementById("fileInput").click();
+}
 </script>
+
 <template>
     <div
         class="fixed z-[100] bg-[#333333bd] inset-0 flex justify-center items-center"
@@ -35,18 +72,25 @@ const close = () => {
             <div class="p-6">
                 <div class="grid gap-4">
                     <img
+                        ref="imgPreview"
                         width="800"
                         height="450"
                         alt="Post Image"
                         class="aspect-video rounded-md object-cover"
-                        src="https://v0.dev/placeholder.svg"
+                        :src="
+                            imgPreview
+                                ? imgPreview.value.src
+                                : 'https://v0.dev/placeholder.svg'
+                        "
                     />
                     <div class="space-y-2">
                         <input
+                            v-model="form.title"
                             class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-sm font-bold"
                             placeholder="Add a title..."
                         />
                         <textarea
+                            v-model="form.content"
                             class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-sm leading-relaxed"
                             placeholder="Write your post content here..."
                             rows="4"
@@ -58,6 +102,7 @@ const close = () => {
                 <div class="flex items-center gap-2">
                     <button
                         class="border-inherit border-solid border-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+                        @click="activeinpute()"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -86,34 +131,13 @@ const close = () => {
                         </svg>
                         <span class="sr-only">Add Image</span>
                     </button>
-                    <button
-                        class="border-inherit border-solid border-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            class="h-5 w-5"
-                        >
-                            <path
-                                d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"
-                            ></path>
-                            <rect
-                                x="2"
-                                y="6"
-                                width="14"
-                                height="12"
-                                rx="2"
-                            ></rect>
-                        </svg>
-                        <span class="sr-only">Add Video</span>
-                    </button>
+                    <input
+                        type="file"
+                        id="fileInput"
+                        style="display: none"
+                        accept="image/*"
+                        @change="previewImage"
+                    />
                 </div>
                 <div class="flex items-center gap-2">
                     <button
@@ -123,6 +147,7 @@ const close = () => {
                         Draft
                     </button>
                     <button
+                        @click="submit"
                         class="bg-black text-white inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
                     >
                         Post
@@ -132,6 +157,7 @@ const close = () => {
         </div>
     </div>
 </template>
+
 <style>
 :root {
     --background: 0 0% 100%;
@@ -159,10 +185,6 @@ const close = () => {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-}
-img[src="/placeholder.svg"],
-img[src="/placeholder-user.jpg"] {
-    filter: sepia(0.3) hue-rotate(-60deg) saturate(0.5) opacity(0.8);
 }
 h1,
 h2,

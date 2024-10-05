@@ -6,6 +6,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+// api 
+use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\FriendController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -34,3 +39,38 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 //page profile 
 
 Route::get('/users/{id}', [ProfileController::class, 'show']);
+
+//post crud
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('posts', PostController::class);
+});
+
+
+
+//routes/api.php
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Route::post('/register', [UserController::class, 'register']);
+Route::post('/login', [UserController::class, 'login']);

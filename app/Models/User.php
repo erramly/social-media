@@ -64,4 +64,27 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
+    // طلبات الصداقة التي قام المستخدم بإرسالها
+    public function sentFriendRequests()
+    {
+        return $this->hasMany(Friend::class, 'user_id');
+    }
+
+    // طلبات الصداقة التي استلمها المستخدم
+    public function receivedFriendRequests()
+    {
+        return $this->hasMany(Friend::class, 'friend_id');
+    }
+
+    // الأصدقاء المقبولين
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id')
+            ->wherePivot('status', 'accepted');
+    }
+    // علاقة الإعجابات
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
 }

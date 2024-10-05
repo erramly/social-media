@@ -2,6 +2,15 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import sideLeft from "@/components/layouts/sideLeft.vue";
 import postCard from "@/components/postCard.vue";
+import showFriendsRequest from "@/components/friends/showFriendsRequest.vue";
+import { onMounted, defineProps } from "vue";
+
+onMounted(() => {
+    console.log(props.posts);
+    console.log(props.user);
+});
+
+const props = defineProps(["posts", "friends_request", "user"]);
 </script>
 
 <template>
@@ -12,133 +21,12 @@ import postCard from "@/components/postCard.vue";
                 <div class="grid grid-cols-3 gap-6">
                     <div class="col-span-2 space-y-6">
                         <!--posts card-->
-                        <postCard v-for="(item, index) in 10" :key="index" />
+                        <postCard :posts="posts" :user="user" />
                     </div>
                     <aside class="space-y-6">
-                        <div class="bg-white p-4 rounded-lg shadow">
-                            <div class="flex items-center justify-between mb-4">
-                                <h2 class="text-lg font-bold">
-                                    Friend Suggestions
-                                </h2>
-                                <a class="text-blue-500" href="#" rel="ugc">
-                                    See All
-                                </a>
-                            </div>
-                            <div class="space-y-4">
-                                <div class="flex items-center gap-4">
-                                    <span
-                                        class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                                    >
-                                        <img
-                                            class="aspect-square h-full w-full"
-                                            alt="Julia Smith"
-                                            src="https://v0.dev/placeholder-user.jpg"
-                                        />
-                                    </span>
-                                    <div>
-                                        <p class="font-bold">Julia Smith</p>
-                                        <p class="text-sm text-gray-500">
-                                            @juliasmith
-                                        </p>
-                                    </div>
-                                    <button
-                                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 ml-auto"
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <span
-                                        class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                                    >
-                                        <img
-                                            class="aspect-square h-full w-full"
-                                            alt="Vermillion D. Gray"
-                                            src="https://v0.dev/placeholder-user.jpg"
-                                        />
-                                    </span>
-                                    <div>
-                                        <p class="font-bold">
-                                            Vermillion D. Gray
-                                        </p>
-                                        <p class="text-sm text-gray-500">
-                                            @vermilliongray
-                                        </p>
-                                    </div>
-                                    <button
-                                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 ml-auto"
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <span
-                                        class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                                    >
-                                        <img
-                                            class="aspect-square h-full w-full"
-                                            alt="Mai Senpai"
-                                            src="https://v0.dev/placeholder-user.jpg"
-                                        />
-                                    </span>
-                                    <div>
-                                        <p class="font-bold">Mai Senpai</p>
-                                        <p class="text-sm text-gray-500">
-                                            @maisenpai
-                                        </p>
-                                    </div>
-                                    <button
-                                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 ml-auto"
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <span
-                                        class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                                    >
-                                        <img
-                                            class="aspect-square h-full w-full"
-                                            alt="Azunyan U. Wu"
-                                            src="https://v0.dev/placeholder-user.jpg"
-                                        />
-                                    </span>
-                                    <div>
-                                        <p class="font-bold">Azunyan U. Wu</p>
-                                        <p class="text-sm text-gray-500">
-                                            @azunyanw
-                                        </p>
-                                    </div>
-                                    <button
-                                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 ml-auto"
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <span
-                                        class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                                    >
-                                        <img
-                                            class="aspect-square h-full w-full"
-                                            alt="Oarack Babama"
-                                            src="https://v0.dev/placeholder-user.jpg"
-                                        />
-                                    </span>
-                                    <div>
-                                        <p class="font-bold">Oarack Babama</p>
-                                        <p class="text-sm text-gray-500">
-                                            @obama21
-                                        </p>
-                                    </div>
-                                    <button
-                                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 ml-auto"
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        <showFriendsRequest
+                            :frinds="friends_request"
+                        ></showFriendsRequest>
                         <div class="bg-white p-4 rounded-lg shadow">
                             <h2 class="text-lg font-bold mb-4">
                                 Profile Activity
