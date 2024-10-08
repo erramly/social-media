@@ -36,16 +36,13 @@ function timeAgo(dateString) {
 }
 function handlimg(url) {
     if (url) {
-        // تحقق مما إذا كان الرابط يبدأ بـ "http://" أو "https://"
         if (url.startsWith("http://") || url.startsWith("https://")) {
-            return url; // إذا كان الرابط يحتوي على بروتوكول، نعيده كما هو
+            return url;
         }
-        // إذا كان الرابط لا يحتوي على بروتوكول، نضيفه
         return "http://localhost:8000/storage/" + url;
     }
-    return url; // إذا كان الرابط غير موجود، نعيد القيمة الأصلية
+    return url;
 }
-
 
 const formatDate = (dateString) => {
     const options = {
@@ -92,37 +89,104 @@ const addComment = (user_id, post_id, comment) => {
         }
     );
 };
+
+const removeComment = (comment_id) => {
+    Inertia.post(
+        "/comment/delete",
+        {
+            comment_id: comment_id,
+        },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                console.log("تمت العملية بنجاح!");
+            },
+        }
+    );
+};
+
+const removePost = (Post_id) => {
+    Inertia.post(
+        "/post/remove",
+        {
+            Post_id: Post_id,
+        },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                console.log("تمت العملية بنجاح!");
+            },
+        }
+    );
+};
 </script>
 <template>
     <div v-for="(post, index) in posts" :key="index">
-        <div class="flex gap-2 p-4 bg-white rounded-md shadow" data-id="42">
+        <div
+            class="flex gap-2 p-4 bg-white rounded-md shadow mt-3"
+            data-id="42"
+        >
             <div class="flex-1" data-id="46">
-                <div class="flex gap-4 mb-3">
-                    <span
-                        class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                        data-id="43"
-                    >
-                        <img
-                            class="aspect-square h-full w-full"
-                            data-id="44"
-                            alt="User Avatar"
-                            :src="post.user.profile_photo_url"
-                        />
-                    </span>
-                    <div>
-                        <p class="font-bold" data-id="47">
-                            {{ post.user.name }}
-                        </p>
-                        <p class="text-sm text-muted-foreground" data-id="48">
-                            {{ formatDate(post.updated_at) }}
-                        </p>
+                <div class="flex gap-4 mb-3 justify-between">
+                    <div class="flex gap-4 mb-3">
+                        <span
+                            class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
+                            data-id="43"
+                        >
+                            <img
+                                class="aspect-square h-full w-full"
+                                data-id="44"
+                                alt="User Avatar"
+                                :src="post.user.profile_photo_url"
+                            />
+                        </span>
+                        <div>
+                            <p class="font-bold" data-id="47">
+                                {{ post.user.name }}
+                            </p>
+                            <p
+                                class="text-sm text-muted-foreground"
+                                data-id="48"
+                            >
+                                {{ formatDate(post.updated_at) }}
+                            </p>
+                        </div>
                     </div>
+                    <button
+                        v-if="user.id == post.user.id"
+                        @click="removePost(post.id)"
+                        class="rounded-full group flex items-center justify-center focus-within:outline-red-500 float-end ml-2"
+                    >
+                        <svg
+                            width="34"
+                            height="34"
+                            viewBox="0 0 34 34"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <circle
+                                class="fill-red-50 transition-all duration-500 group-hover:fill-red-400"
+                                cx="17"
+                                cy="17"
+                                r="17"
+                                fill=""
+                            />
+                            <path
+                                class="stroke-red-500 transition-all duration-500 group-hover:stroke-white"
+                                d="M14.1673 13.5997V12.5923C14.1673 11.8968 14.7311 11.333 15.4266 11.333H18.5747C19.2702 11.333 19.834 11.8968 19.834 12.5923V13.5997M19.834 13.5997C19.834 13.5997 14.6534 13.5997 11.334 13.5997C6.90804 13.5998 27.0933 13.5998 22.6673 13.5997C21.5608 13.5997 19.834 13.5997 19.834 13.5997ZM12.4673 13.5997H21.534V18.8886C21.534 20.6695 21.534 21.5599 20.9807 22.1131C20.4275 22.6664 19.5371 22.6664 17.7562 22.6664H16.2451C14.4642 22.6664 13.5738 22.6664 13.0206 22.1131C12.4673 21.5599 12.4673 20.6695 12.4673 18.8886V13.5997Z"
+                                stroke="#EF4444"
+                                stroke-width="1.6"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                    </button>
                 </div>
                 <p data-id="49">
                     {{ post.title }}
                 </p>
                 <p class="text-blue-500">{{ post.content }}</p>
-                <img v-if="post.image"
+                <img
+                    v-if="post.image"
                     data-id="50"
                     :src="handlimg(post.image)"
                     class="w-full h-auto mt-2 rounded-md"
@@ -238,15 +302,44 @@ const addComment = (user_id, post_id, comment) => {
             </div>
         </div>
         <!--commetns-->
-        <div class="comments-cards p-5 bg-gray-200">
+        <div
+            class="comments-cards h-40 overflow-auto p-5 bg-gray-200"
+            v-if="post.comments.length > 0"
+        >
             <div
-                v-for="(comment, index) in [...post.comments]
-                    .slice(-4)
-                    .reverse()"
+                v-for="(comment, index) in post.comments"
                 :key="index"
-                class="text-card-foreground shadow-sm bg-white border border-muted rounded-lg p-4 mb-2"
+                class="text-card-foreground shadow-sm bg-white border border-muted rounded-lg p-4 mb-2 h-fit"
                 data-v0-t="card"
             >
+                <button
+                    v-if="user.id == comment.user.id"
+                    @click="removeComment(comment.id)"
+                    class="rounded-full group flex items-center justify-center focus-within:outline-red-500 float-end ml-2"
+                >
+                    <svg
+                        width="34"
+                        height="34"
+                        viewBox="0 0 34 34"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <circle
+                            class="fill-red-50 transition-all duration-500 group-hover:fill-red-400"
+                            cx="17"
+                            cy="17"
+                            r="17"
+                            fill=""
+                        />
+                        <path
+                            class="stroke-red-500 transition-all duration-500 group-hover:stroke-white"
+                            d="M14.1673 13.5997V12.5923C14.1673 11.8968 14.7311 11.333 15.4266 11.333H18.5747C19.2702 11.333 19.834 11.8968 19.834 12.5923V13.5997M19.834 13.5997C19.834 13.5997 14.6534 13.5997 11.334 13.5997C6.90804 13.5998 27.0933 13.5998 22.6673 13.5997C21.5608 13.5997 19.834 13.5997 19.834 13.5997ZM12.4673 13.5997H21.534V18.8886C21.534 20.6695 21.534 21.5599 20.9807 22.1131C20.4275 22.6664 19.5371 22.6664 17.7562 22.6664H16.2451C14.4642 22.6664 13.5738 22.6664 13.0206 22.1131C12.4673 21.5599 12.4673 20.6695 12.4673 18.8886V13.5997Z"
+                            stroke="#EF4444"
+                            stroke-width="1.6"
+                            stroke-linecap="round"
+                        />
+                    </svg>
+                </button>
                 <div class="flex items-start gap-4">
                     <span
                         class="relative flex shrink-0 overflow-hidden rounded-full h-10 w-10"
@@ -263,14 +356,16 @@ const addComment = (user_id, post_id, comment) => {
                             <div class="font-medium">
                                 {{ comment.user.name }}
                             </div>
-                            <div class="text-xs text-muted-foreground">
-                                {{ timeAgo(comment.created_at) }}
-                            </div>
                         </div>
-                        <div class="text-muted-foreground text-gray-500">
+                        <div
+                            class="text-muted-foreground text-gray-500 text-content overflow-hidden"
+                        >
                             {{ comment.content }}
                         </div>
                     </div>
+                </div>
+                <div class="text-xs text-muted-foreground float-end pb-6">
+                    {{ timeAgo(comment.created_at) }}
                 </div>
             </div>
         </div>

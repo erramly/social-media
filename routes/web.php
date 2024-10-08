@@ -8,6 +8,8 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\CommentController;
 
+use function Termwind\render;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -54,14 +56,25 @@ Route::post('/posts-create', [PostController::class, "store"]);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/friend-request/accept', [FriendController::class, 'acceptRequest']);
+    Route::post('/friend-request/send/{id}', [FriendController::class, 'sendRequest']);
+    Route::get('/friend-page', [FriendController::class, 'index']);
+
 });
 
 
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/like/add', [LikeController::class, 'store']);
+    Route::post('/post/remove', [PostController::class, 'destroy']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/comment/add', [CommentController::class, 'store']);
+    Route::post('/comment/delete', [PostController::class, 'delete']);
+});
+
+
+Route::get("/profileshow",function () {
+     
+    return Inertia::render('ProfileShow');
 });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Inertia\Inertia;
 use App\Models\Friend;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -25,28 +26,59 @@ class PostController extends Controller
             ->where("status", 'pending')
             ->with('friend')
             ->get();
-
-        // get user auth friends 
-        $friendIds = DB::table('friends')
-            ->where('user_id', auth()->id())
-            ->where('status', 'accepted')
+        //get posts friends to user page========================================================================================================
+        // الحصول على معرفات الأصدقاء الذين لديهم علاقة بالمستخدم الحالي
+        $friendIdsAsUserPosts = DB::table('friends')
+            ->where('user_id', $user->id)
+            ->where('status', 'accepted') // التأكد من أن العلاقة مقبولة
             ->pluck('friend_id')
             ->toArray();
 
-        // add posts user auth 
-        $friendIds[] = $user->id;
+        $friendIdsAsFriendPosts = DB::table('friends')
+            ->where('friend_id', $user->id)
+            ->where('status', 'accepted') // التأكد من أن العلاقة مقبولة
+            ->pluck('user_id')
+            ->toArray();
 
-        // get friends posts and post user auth
-        $posts = Post::whereIn('user_id', $friendIds)
-            ->with(['user', 'likes', 'comments.user']) // get users and likes and comments
-            ->latest() // get post by last date
+        // دمج معرفات الأصدقاء في مصفوفة واحدة
+        $allFriendIds = array_merge($friendIdsAsUserPosts, $friendIdsAsFriendPosts);
+
+        // إضافة المستخدم الحالي إذا كنت ترغب في تضمينه
+        $allFriendIds[] = $user->id;
+
+        // الحصول على المشاركات من الأصدقاء والمستخدم الحالي
+        $posts = Post::whereIn('user_id', $allFriendIds)
+            ->with(['user', 'likes', 'comments.user']) // جلب المستخدمين والإعجابات والتعليقات
+            ->latest() // الحصول على المشاركات بترتيب آخر تاريخ
             ->get();
 
+
+        //recommed friends ========================================================================================================
+        // جلب جميع العلاقات حيث يكون المستخدم هو user_id
+        $friendIdsAsUser = DB::table('friends')
+            ->where('user_id', $user->id)
+            ->pluck('friend_id') // جلب friend_id المرتبطة بالمستخدم
+            ->toArray(); // تحويل النتائج إلى مصفوفة
+
+        // جلب جميع العلاقات حيث يكون المستخدم هو friend_id
+        $friendIdsAsFriend = DB::table('friends')
+            ->where('friend_id', $user->id)
+            ->pluck('user_id') // جلب user_id المرتبطة بالمستخدم
+            ->toArray(); // تحويل النتائج إلى مصفوفة
+
+
+        $friendNotRelationWithUser = array_merge($friendIdsAsUser, $friendIdsAsFriend);
+
+        $friendsRecommend = User::whereNotIn('id', $friendNotRelationWithUser)
+            ->where('id', '!=', $user->id) // استثناء المستخدم الحالي من التوصيات
+            ->get();
+        //=========================================================================================================================
         // render this data in home page vue page name is : Home.vue
         return Inertia::render('Home', [
             'user' => $user,
             'posts' => $posts,
-            'friends_request' => $friendsOrders
+            'friends_request' => $friendsOrders,
+            'friendsRecommend' => $friendsRecommend
         ]);
     }
 
@@ -134,11 +166,12 @@ class PostController extends Controller
     /**
      * حذف المنشور.
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $post = Post::findOrFail($id);
+        $post_id = $request->input("Post_id");
+        $post = Post::findOrFail($post_id);
         $post->delete();
 
-        return redirect()->route('posts.index')->with('success', 'تم حذف المنشور بنجاح.');
+        return redirect('/')->with('success', 'تم حدف المنشور بنجاح.');;
     }
 }

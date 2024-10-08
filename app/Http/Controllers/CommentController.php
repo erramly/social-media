@@ -22,4 +22,14 @@ class CommentController extends Controller
         ]);
         return redirect()->back()->with('comment', $comment);
     }
+    public function delete(Request $request)
+    {
+
+        $comment_id = $request->input("comment_id");
+        $comment = Comment::find($comment_id);
+        $comment->delete();
+
+        
+        return redirect()->back()->with('comment', $comment);
+    }
 }

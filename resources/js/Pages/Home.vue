@@ -1,32 +1,69 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import sideLeft from "@/components/layouts/sideLeft.vue";
 import postCard from "@/components/postCard.vue";
 import showFriendsRequest from "@/components/friends/showFriendsRequest.vue";
-import { onMounted, defineProps } from "vue";
+import friendsRecommendComponent from "@/components/friends/friendsRecommend.vue";
+import CreatePost from "@/components/modals/CreatePost.vue";
+import storycards from "@/components/story/storycards.vue";
+
+import { onMounted, defineProps, ref } from "vue";
 
 onMounted(() => {
     console.log(props.posts);
-    console.log(props.user);
 });
-
-const props = defineProps(["posts", "friends_request", "user"]);
+const isModalOpen = ref(false);
+const closeModal = () => {
+    isModalOpen.value = isModalOpen.value ? false : true;
+};
+const props = defineProps([
+    "posts",
+    "friends_request",
+    "user",
+    "friendsRecommend",
+]);
 </script>
 
 <template>
     <AppLayout title="Dashboard">
+        <CreatePost v-if="isModalOpen" @close="closeModal" />
         <div class="flex min-h-screen bg-gray-100">
-            <sideLeft />
-            <main class="flex-1 p-6">
-                <div class="grid grid-cols-3 gap-6">
+            <main class="flex-1 p-6 w-full">
+                <div class="2xl:grid 2xl:grid-cols-3 2xl:gap-6 w-full">
                     <div class="col-span-2 space-y-6">
-                        <!--posts card-->
-                        <postCard :posts="posts" :user="user" />
+                        <storycards />
+
+                        <div
+                            class="flex items-center w-full m-auto bg-white p-6 rounded-xl"
+                        >
+                            <img
+                                :src="user.profile_photo_url"
+                                alt="profile photo"
+                                class="w-10 h-10 rounded-full mr-4 object-cover"
+                            />
+                            <input
+                                @click="closeModal"
+                                class="flex w-full mr-4 h-10 rounded-full border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                :placeholder="
+                                    'What are you thinking ' +
+                                    $page.props.auth.user.name +
+                                    ' ?'
+                                "
+                                type="search"
+                            />
+                            <!--=================================================================================================================================================================================================================================================================================================================================================================================-->
+                        </div>
+                        <div>
+                            <!--posts card-->
+                            <postCard :posts="posts" :user="user" />
+                        </div>
                     </div>
-                    <aside class="space-y-6">
+                    <aside class="space-y-6 max-2xl:hidden">
                         <showFriendsRequest
                             :frinds="friends_request"
                         ></showFriendsRequest>
+                        <friendsRecommendComponent
+                            :friendsRecommend="friendsRecommend"
+                        ></friendsRecommendComponent>
                         <div class="bg-white p-4 rounded-lg shadow">
                             <h2 class="text-lg font-bold mb-4">
                                 Profile Activity

@@ -2,7 +2,6 @@
 import { ref } from "vue";
 import { useForm } from "@inertiajs/vue3";
 
-// نموذج Inertia
 const form = useForm({
     title: "",
     content: "",
@@ -44,7 +43,7 @@ function activeinpute() {
 
 <template>
     <div
-        class="fixed z-[100] bg-[#333333bd] inset-0 flex justify-center items-center"
+        class="fixed z-[99999] bg-[#333333bd] inset-0 flex justify-center items-center absolute"
     >
         <div
             class="fixed bg-white mi-auto rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-2xl"

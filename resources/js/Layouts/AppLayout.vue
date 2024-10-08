@@ -6,14 +6,12 @@ import Banner from "@/Components/Banner.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
-import CreatePost from "@/components/modals/CreatePost.vue";
+import sideLeft from "@/components/layouts/sideLeft.vue";
+import BottomNavbar from "@/components/mobile/Bottom-Navbar.vue";
 defineProps({
     title: String,
 });
-const isModalOpen = ref(false);
-const closeModal = () => {
-    isModalOpen.value = isModalOpen.value ? false : true;
-};
+
 const showingNavigationDropdown = ref(false);
 
 const switchToTeam = (team) => {
@@ -38,7 +36,6 @@ const logout = () => {
         <Head :title="title" />
         <Banner />
 
-        <CreatePost v-if="isModalOpen" @close="closeModal" />
         <div class="min-h-screen bg-gray-100">
             <nav class="border-b border-gray-100 bg-gray-900">
                 <!-- Primary Navigation Menu -->
@@ -53,120 +50,29 @@ const logout = () => {
                             </div>
 
                             <!-- Navigation Links -->
-                            <div class="space-x-8 sm:ms-10 flex items-center">
-                                <div class="flex items-center justify-between">
-                                    <input
-                                        @click="closeModal"
-                                        class="flex w-[32rem] mr-4 h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                        :placeholder="
-                                            'بم تفكر يا ' +
-                                            $page.props.auth.user.name
-                                        "
-                                        type="search"
-                                    />
-                                    <!--=================================================================================================================================================================================================================================================================================================================================================================================-->
-                                    <button
-                                        class="text-white inline-flex mx- items-center justify-center whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-400 text-primary-foreground hover:bg-primary/90 h-10 px-6 py-3 rounded-md text-lg font-medium"
-                                    >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 512 512"
-                                        >
-                                            <path
-                                                class="fa-secondary"
-                                                opacity=".4"
-                                                d="M0 288l160 64L384 160 225.9 381.3l61.6 27.4L448 480 512 0 0 288z"
-                                            />
-                                            <path
-                                                class="fa-primary"
-                                                d="M384 160L160 352l0 32 0 32 0 80 48 16 79.5-103.3-61.6-27.4L384 160z"
-                                            />
-                                        </svg>
-                                        Publish Post
-                                    </button>
-                                    <div class="flex space-x-2">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            stroke-width="2"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            class="w-6 h-6"
-                                        >
-                                            <path
-                                                d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"
-                                            ></path>
-                                            <rect
-                                                x="2"
-                                                y="6"
-                                                width="14"
-                                                height="12"
-                                                rx="2"
-                                            ></rect>
-                                        </svg>
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            stroke-width="2"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            class="w-6 h-6"
-                                        >
-                                            <rect
-                                                width="18"
-                                                height="18"
-                                                x="3"
-                                                y="3"
-                                                rx="2"
-                                                ry="2"
-                                            ></rect>
-                                            <circle
-                                                cx="9"
-                                                cy="9"
-                                                r="2"
-                                            ></circle>
-                                            <path
-                                                d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"
-                                            ></path>
-                                        </svg>
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            stroke-width="2"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            class="w-6 h-6"
-                                        >
-                                            <path
-                                                d="M12.67 19a2 2 0 0 0 1.416-.588l6.154-6.172a6 6 0 0 0-8.49-8.49L5.586 9.914A2 2 0 0 0 5 11.328V18a1 1 0 0 0 1 1z"
-                                            ></path>
-                                            <path d="M16 8 2 22"></path>
-                                            <path d="M17.5 15H9"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
+                            <div
+                                class="space-x-8 sm:ms-10 flex items-center"
+                            ></div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
                             <div class="ms-3 relative">
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    width="20"
+                                    height="20"
+                                    class="x19dipnz x1lliihq x1tzjh5l x1k90msu x2h7rmj x1qfuztq"
+                                    fill="white"
+                                >
+                                    <path
+                                        d="M3 9.5a9 9 0 1 1 18 0v2.927c0 1.69.475 3.345 1.37 4.778a1.5 1.5 0 0 1-1.272 2.295h-4.625a4.5 4.5 0 0 1-8.946 0H2.902a1.5 1.5 0 0 1-1.272-2.295A9.01 9.01 0 0 0 3 12.43V9.5zm6.55 10a2.5 2.5 0 0 0 4.9 0h-4.9z"
+                                    ></path>
+                                </svg>
                                 <!-- Teams Dropdown -->
                                 <Dropdown
                                     v-if="$page.props.jetstream.hasTeamFeatures"
                                     align="right"
-                                    width="60"
+                                    width="100"
                                 >
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
@@ -592,9 +498,14 @@ const logout = () => {
             </nav>
 
             <!-- Page Content -->
-            <main>
-                <slot></slot>
-            </main>
+            <div class="lg:grid lg:grid-cols-[20%_80%] min-h-screen">
+                <sideLeft />
+                <main>
+                    <slot></slot>
+                </main>
+            </div>
         </div>
+        <!-- BottomNavbar -->
+        <BottomNavbar />
     </div>
 </template>
