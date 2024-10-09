@@ -70,7 +70,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/comment/add', [CommentController::class, 'store']);
-    Route::post('/comment/delete', [PostController::class, 'delete']);
+    Route::post('/comment/delete', [CommentController::class, 'delete']);
 });
 
 
