@@ -5,11 +5,6 @@ import { ref } from "vue";
 let comment = ref([]);
 defineProps(["posts", "user"]);
 
-const showCommetsCards = (index) => {
-    let commetEle = document.querySelectorAll(".comments-cards")[index];
-
-    commetEle.classList.toggle("hidden");
-};
 function timeAgo(dateString) {
     const date = new Date(dateString);
     const now = new Date();
@@ -119,6 +114,14 @@ const removePost = (Post_id) => {
         }
     );
 };
+
+const showCommetsCards = (index) => {
+    console.log(index);
+
+    let commetEle = document.querySelectorAll(".comments-cards")[index];
+    console.log(commetEle);
+    commetEle.classList.toggle("comments-show");
+};
 </script>
 <template>
     <div v-for="(post, index) in posts" :key="index">
@@ -141,9 +144,12 @@ const removePost = (Post_id) => {
                             />
                         </span>
                         <div>
-                            <p class="font-bold" data-id="47">
-                                {{ post.user.name }}
-                            </p>
+                            <a :href="`/profileshow/${post.user.id}`">
+                                <p class="font-bold" data-id="47">
+                                    {{ post.user.name }}
+                                </p></a
+                            >
+
                             <p
                                 class="text-sm text-muted-foreground"
                                 data-id="48"
@@ -153,7 +159,7 @@ const removePost = (Post_id) => {
                         </div>
                     </div>
                     <button
-                        v-if="user.id == post.user.id"
+                        v-if="$page.props.auth.user.id == post.user.id"
                         @click="removePost(post.id)"
                         class="rounded-full group flex items-center justify-center focus-within:outline-red-500 float-end ml-2"
                     >
@@ -303,7 +309,7 @@ const removePost = (Post_id) => {
         </div>
         <!--commetns-->
         <div
-            class="comments-cards h-40 overflow-auto p-5 bg-gray-200"
+            class="comments-cards p-5 bg-gray-300 comments-show"
             v-if="post.comments.length > 0"
         >
             <div
@@ -313,7 +319,7 @@ const removePost = (Post_id) => {
                 data-v0-t="card"
             >
                 <button
-                    v-if="user.id == comment.user.id"
+                    v-if="$page.props.auth.user.id == comment.user.id"
                     @click="removeComment(comment.id)"
                     class="rounded-full group flex items-center justify-center focus-within:outline-red-500 float-end ml-2"
                 >
@@ -371,3 +377,8 @@ const removePost = (Post_id) => {
         </div>
     </div>
 </template>
+<style scoped>
+.comments-show {
+    display: none;
+}
+</style>

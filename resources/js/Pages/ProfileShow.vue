@@ -1,137 +1,215 @@
-<template>
-    <div>
-        <div class="w-full max-w-[800px] mx-auto">
-            <div class="relative h-[300px] overflow-hidden rounded-t-lg">
-                <img
-                    :src="handlimgae(user.profile_image)"
-                    alt="Cover Photo"
-                    class="w-full h-full object-contain"
-                    width="800"
-                    height="300"
-                    style="aspect-ratio: 800 / 300; object-fit: cover"
-                />
-                <div
-                    class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent h-[100px] pointer-events-none"
-                ></div>
-            </div>
-            <div
-                class="bg-background rounded-b-lg shadow-lg -mt-[80px] relative z-10 px-6 py-4"
-            >
-                <div class="flex items-center gap-4">
-                    <div
-                        class="rounded-full border-4 border-background w-[120px] h-[120px] overflow-hidden"
-                    >
-                        <img
-                            :src="handlimgae(user.profile_image)"
-                            alt="Profile Picture"
-                            class="w-full h-full object-contain"
-                        />
-                    </div>
-                    <div class="flex-1">
-                        <h1 class="text-2xl font-bold text-white">
-                            {{ user.first_name }}
-                            {{ user.last_name }}
-                        </h1>
-                        <p class="text-muted-foreground">
-                            @{{ user.username }}
-                        </p>
-                    </div>
-                </div>
-                <div class="mt-4 text-muted-foreground">
-                    <p>
-                        I'm a passionate software engineer with a love for
-                        building innovative products. In my free time, I enjoy
-                        exploring the great outdoors and tinkering with new
-                        technologies.
-                    </p>
-                </div>
-            </div>
-           
-        </div>
-    </div>
-</template>
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
-let route = useRoute();
+import AppLayout from "@/Layouts/AppLayout.vue";
+import { defineProps } from "vue";
+import postCard from "@/components/postCard.vue";
+let props = defineProps(["posts", "user", "frindsCount"]);
 
-let user = ref({});
-
-let getUser = () => {
-    const myHeaders = new Headers();
-    myHeaders.append(
-        "Cookie",
-        "XSRF-TOKEN=eyJpdiI6ImVKU3ZsTzhKZXRZbTdmYXZIMTY1NFE9PSIsInZhbHVlIjoib2dzL0IwWjZDMGw2YnFlZFJNbGVmclJ5NkI0UWJXTFdSdWQyNHZ4WlBtYzRka2U1cFdvOWNlV2RPOFNoNWZpd1lwcTEyVzFpL01JQzB4VlJvU2xndFZxRGFCVDM3VjVuWURRUUtjU1owQjJ0Q1k0YlZyRFpMcHF3RXJiWlVlNzQiLCJtYWMiOiIwNjBmMjliMzMzZDZkYTFmNzgwYmIwYmQ0YWVlM2I1NzkxYTQ4N2NhZTM2Yzc5N2FjMzllNWE0NjM0MGJhZjM1IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InF6RHowK1Mwa3BmKzJUR1k4L0FOZ1E9PSIsInZhbHVlIjoiRlpnZGpXS1VBUXUzRytIbUY3YmY1QkxPaDgxcUovQlB5dXEwYUtSWUpXc3Z4aS9ISHVlbXUxQTlLMmFKK2V6NGdNd1FtOEQ3OEliSnozTHNHUjJkRTUyMkJtMThvWnhoNnlhMEpCT01XVjhGRW5KOXF3RC9WMGhaNzlLQ1dTWEMiLCJtYWMiOiI0YzcyY2ZlZTk5NjUzNDY2Y2UxMzcyZjdlODgxMGU3MjJmMzUwYzIzZDQzMjIwNjdhYjgyNzdhNjc3MmJlMzZkIiwidGFnIjoiIn0%3D"
-    );
-
-    const requestOptions = {
-        method: "GET",
-        headers: myHeaders,
-        redirect: "follow",
-    };
-
-    fetch(`http://localhost:8000/api/users/${route.params.id}`, requestOptions)
-        .then((response) => response.json())
-        .then((result) => {
-            user.value = result;
-            console.log(result);
-        })
-        .catch((error) => console.error(error));
-};
+console.log(props.posts);
+console.log(props.user);
+console.log(props.frindsCount);
 
 let handlimgae = (e) => {
     return "http://localhost:8000/storage/" + e;
 };
-
-onMounted(() => {
-    getUser();
-});
 </script>
+<template>
+    <AppLayout>
+        <section class="profile-content">
+            <div class="cover-photo">
+                <div class="profile-photo">
+                    <img :src="user.profile_photo_url" alt="" />
+                </div>
+            </div>
+            <div class="profile-info">
+                <h1 class="profile-name">{{ user.name }}</h1>
+                <p class="friend-count">{{ frindsCount }} friends</p>
+                <div class="profile-actions">
+                    <button
+                        class="add-friend"
+                        v-if="!user.id != $page.props.auth.user.id"
+                    >
+                        Add Friend
+                    </button>
+                    <a :href="`/chatify/${user.id}`">
+                        <button
+                            class="message"
+                            v-if="user.id != $page.props.auth.user.id"
+                        >
+                            Message
+                        </button>
+                    </a>
+                    <button
+                        class="more"
+                        v-if="!user.id == $page.props.auth.user.id"
+                    >
+                        •••
+                    </button>
+                </div>
+                <nav class="profile-nav">
+                    <a href="#"
+                        >Posts</a
+                    >
+                </nav>
+            </div>
+            <!--posts card-->
+            <postCard :posts="posts" :user="user" />
+        </section>
+    </AppLayout>
+</template>
+
 <style>
-:root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 45%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
-    --chart-1: 173 58% 39%;
-    --chart-2: 12 76% 61%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-img[src="https://v0.dev/placeholder.svg"],
-img[src="/placeholder-user.jpg"] {
-    filter: sepia(0.3) hue-rotate(-60deg) saturate(0.5) opacity(0.8);
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: "Inter", sans-serif;
-    --font-sans-serif: "Inter";
-}
-
 body {
-    font-family: "Inter", sans-serif;
-    --font-sans-serif: "Inter";
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    line-height: 1.6;
+}
+/* Header styles */
+header {
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+}
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 8px 16px;
+}
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #1877f2;
+}
+.search-bar {
+    flex-grow: 1;
+    margin: 0 16px;
+}
+.search-bar input {
+    width: 100%;
+    max-width: 240px;
+    padding: 8px;
+    border: none;
+    border-radius: 20px;
+    background-color: #f0f2f5;
+}
+.nav-icons a {
+    color: #65676b;
+    text-decoration: none;
+    padding: 8px;
+    margin-left: 8px;
+}
+/* Main content styles */
+main {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto 0;
+    padding: 20px;
+}
+.left-sidebar,
+.right-sidebar {
+    width: 250px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 20px;
+}
+.profile-content {
+    flex-grow: 1;
+    margin: 0 20px;
+}
+.cover-photo {
+    height: 300px;
+    background-color: #1877f2;
+    border-radius: 8px 8px 0 0;
+    position: relative;
+}
+.profile-photo {
+    width: 168px;
+    height: 168px;
+    border-radius: 50%;
+    border: 4px solid #ffffff;
+    position: absolute;
+    bottom: -22px;
+    left: 20px;
+    background-color: #e4e6eb;
+    overflow: hidden;
+}
+.profile-info {
+    background-color: #ffffff;
+    border-radius: 0 0 8px 8px;
+    padding: 20px;
+    padding-top: 60px;
+}
+.profile-name {
+    font-size: 32px;
+    font-weight: bold;
+}
+.friend-count {
+    color: #65676b;
+    margin-bottom: 16px;
+}
+.profile-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.profile-actions button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.add-friend {
+    background-color: #1877f2;
+    color: #ffffff;
+}
+.message {
+    background-color: #e4e6eb;
+    color: #050505;
+}
+.profile-nav {
+    border-top: 1px solid #e4e6eb;
+    padding-top: 16px;
+}
+.profile-nav a {
+    color: #65676b;
+    text-decoration: none;
+    margin-right: 16px;
+    font-weight: bold;
+}
+/* Responsive styles */
+@media (max-width: 1024px) {
+    .left-sidebar,
+    .right-sidebar {
+        display: none;
+    }
+    .profile-content {
+        margin: 0;
+    }
+}
+@media (max-width: 768px) {
+    .search-bar {
+        display: none;
+    }
+    .profile-photo {
+        width: 128px;
+        height: 128px;
+    }
+    .profile-name {
+        font-size: 24px;
+    }
 }
 </style>

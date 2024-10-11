@@ -1,11 +1,11 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useForm } from "@inertiajs/vue3";
 
-const form = useForm({
+let form = useForm({
     title: "",
     content: "",
-    image: null, 
+    image: null,
 });
 
 const imgPreview = ref(null);
@@ -32,18 +32,30 @@ function previewImage(event) {
             imgPreview.value.src = e.target.result;
         };
         reader.readAsDataURL(file);
-        form.image = file; 
+        form.image = file;
     }
 }
 
 function activeinpute() {
     document.getElementById("fileInput").click();
 }
+
+const showError = computed(() => {
+    if (form.title === "") {
+        return "input title empty";
+    }
+    if (form.content === "") {
+        return "input content is empty";
+    }
+    return false;
+});
+
+const now = computed(() => Date.now());
 </script>
 
 <template>
     <div
-        class="fixed z-[99999] bg-[#333333bd] inset-0 flex justify-center items-center absolute"
+        class="fixed z-[99999] bg-[#333333bd] inset-0 flex justify-center items-center"
     >
         <div
             class="fixed bg-white mi-auto rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-2xl"
@@ -57,11 +69,13 @@ function activeinpute() {
                         <img
                             class="aspect-square h-full w-full"
                             alt="@shadcn"
-                            src="https://v0.dev/placeholder-user.jpg"
+                            :src="$page.props.auth.user.profile_photo_url"
                         />
                     </span>
                     <div class="grid gap-1">
-                        <p class="text-sm font-medium">Acme Inc</p>
+                        <p class="text-sm font-medium">
+                            {{ $page.props.auth.user.name }}
+                        </p>
                         <p class="text-sm text-muted-foreground">
                             Sharing an update with the team
                         </p>
@@ -76,11 +90,7 @@ function activeinpute() {
                         height="450"
                         alt="Post Image"
                         class="aspect-video rounded-md object-cover"
-                        :src="
-                            imgPreview
-                                ? imgPreview.value.src
-                                : 'https://v0.dev/placeholder.svg'
-                        "
+                        src="https://v0.dev/placeholder.svg"
                     />
                     <div class="space-y-2">
                         <input
@@ -96,6 +106,12 @@ function activeinpute() {
                         ></textarea>
                     </div>
                 </div>
+                <h1
+                    class="text-red-700 mt-4 bg-red-200 p-4 rounded-md"
+                    v-if="showError"
+                >
+                    {{ showError }}
+                </h1>
             </div>
             <div class="p-6 flex items-center justify-between">
                 <div class="flex items-center gap-2">

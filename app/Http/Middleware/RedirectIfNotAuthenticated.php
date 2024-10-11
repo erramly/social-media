@@ -17,7 +17,7 @@ class RedirectIfNotAuthenticated
     public function handle(Request $request, Closure $next)
     {
         if (!Auth::check()) {
-            return redirect()->route('login'); // توجيه إلى صفحة تسجيل الدخول
+            return redirect()->route('login'); 
         }
 
         return $next($request);

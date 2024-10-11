@@ -7,6 +7,7 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ProfileController;
 
 use function Termwind\render;
 
@@ -22,7 +23,7 @@ use function Termwind\render;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Dashboard', [
+    return Inertia::render('Home', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -47,18 +48,11 @@ Route::post('/posts-create', [PostController::class, "store"]);
 
 
 
-// Route::middleware('auth:sanctum')->group(function () {
-//     Route::post('/friend-request/send/{id}', [FriendController::class, 'sendRequest']);
-//     Route::post('/friend-request/accept/{id}', [FriendController::class, 'acceptRequest']);
-//     Route::post('/friend-request/decline/{id}', [FriendController::class, 'declineRequest']);
-//     Route::get('/friends-request', [FriendController::class, 'getOrdersFreids']);
-// });
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/friend-request/accept', [FriendController::class, 'acceptRequest']);
     Route::post('/friend-request/send/{id}', [FriendController::class, 'sendRequest']);
     Route::get('/friend-page', [FriendController::class, 'index']);
-
 });
 
 
@@ -74,7 +68,4 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-Route::get("/profileshow",function () {
-     
-    return Inertia::render('ProfileShow');
-});
+Route::get("/profileshow/{id}", [ProfileController::class, "show"]);

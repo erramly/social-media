@@ -345,14 +345,14 @@ const logout = () => {
                     }"
                     class="sm:hidden"
                 >
-                    <div class="pt-2 pb-3 space-y-1">
+                    <!-- <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink
                             :href="route('dashboard')"
                             :active="route().current('dashboard')"
                         >
                             Dashboard
                         </ResponsiveNavLink>
-                    </div>
+                    </div> -->
 
                     <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-gray-200">
@@ -373,9 +373,7 @@ const logout = () => {
                             </div>
 
                             <div>
-                                <div
-                                    class="font-medium text-base text-gray-800"
-                                >
+                                <div class="font-medium text-base text-white">
                                     {{ $page.props.auth.user.name }}
                                 </div>
                                 <div class="font-medium text-sm text-gray-500">
@@ -386,7 +384,7 @@ const logout = () => {
 
                         <div class="mt-3 space-y-1">
                             <ResponsiveNavLink
-                                :href="route('profile.show')"
+                                :href="`/profileshow/${$page.props.auth.user.id}`"
                                 :active="route().current('profile.show')"
                             >
                                 Profile
