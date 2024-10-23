@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from "vue";
-import { Head, Link, router } from "@inertiajs/vue3";
+import { ref, onMounted } from "vue";
+import { Head, Link, router, usePage } from "@inertiajs/vue3";
 import ApplicationMark from "@/Components/ApplicationMark.vue";
 import Banner from "@/Components/Banner.vue";
 import Dropdown from "@/Components/Dropdown.vue";
@@ -8,11 +8,13 @@ import DropdownLink from "@/Components/DropdownLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import sideLeft from "@/components/layouts/sideLeft.vue";
 import BottomNavbar from "@/components/mobile/Bottom-Navbar.vue";
-defineProps({
-    title: String,
-});
+import NotificationCard from "@/components/modals/NotificationCard.vue";
+
+const props = defineProps({ title: String });
+const page = usePage();
 
 const showingNavigationDropdown = ref(false);
+const showingNavigationCard = ref(false);
 
 const switchToTeam = (team) => {
     router.put(
@@ -25,7 +27,13 @@ const switchToTeam = (team) => {
         }
     );
 };
+const isUserHaveNotivegation = () => {
+    return !page.props.auth.notifications.length > 0;
+};
 
+onMounted(() => {
+    console.log(isUserHaveNotivegation());
+});
 const logout = () => {
     router.post(route("logout"));
 };
@@ -35,7 +43,9 @@ const logout = () => {
     <div>
         <Head :title="title" />
         <Banner />
-
+        <Transition name="slide-fade">
+            <NotificationCard v-if="showingNavigationCard"
+        /></Transition>
         <div class="min-h-screen bg-gray-100">
             <nav class="border-b border-gray-100 bg-gray-900">
                 <!-- Primary Navigation Menu -->
@@ -56,7 +66,27 @@ const logout = () => {
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
-                            <div class="ms-3 relative">
+                            <div
+                                class="me-3 relative cursor-pointer"
+                                @click="
+                                    showingNavigationCard =
+                                        !showingNavigationCard
+                                "
+                            >
+                                <!--note-->
+                                <span
+                                    :class="{
+                                        hidden: isUserHaveNotivegation(),
+                                    }"
+                                    class="flex absolute right-[-2px] top-[-5px] h-3 w-3"
+                                >
+                                    <span
+                                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
+                                    ></span>
+                                    <span
+                                        class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"
+                                    ></span>
+                                </span>
                                 <svg
                                     viewBox="0 0 24 24"
                                     width="20"
@@ -68,142 +98,6 @@ const logout = () => {
                                         d="M3 9.5a9 9 0 1 1 18 0v2.927c0 1.69.475 3.345 1.37 4.778a1.5 1.5 0 0 1-1.272 2.295h-4.625a4.5 4.5 0 0 1-8.946 0H2.902a1.5 1.5 0 0 1-1.272-2.295A9.01 9.01 0 0 0 3 12.43V9.5zm6.55 10a2.5 2.5 0 0 0 4.9 0h-4.9z"
                                     ></path>
                                 </svg>
-                                <!-- Teams Dropdown -->
-                                <Dropdown
-                                    v-if="$page.props.jetstream.hasTeamFeatures"
-                                    align="right"
-                                    width="100"
-                                >
-                                    <template #trigger>
-                                        <span class="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150"
-                                            >
-                                                {{
-                                                    $page.props.auth.user
-                                                        .current_team.name
-                                                }}
-
-                                                <svg
-                                                    class="ms-2 -me-0.5 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    stroke-width="1.5"
-                                                    stroke="currentColor"
-                                                >
-                                                    <path
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                        d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </template>
-
-                                    <template #content>
-                                        <div class="w-60">
-                                            <!-- Team Management -->
-                                            <div
-                                                class="block px-4 py-2 text-xs text-gray-400"
-                                            >
-                                                Manage Team
-                                            </div>
-
-                                            <!-- Team Settings -->
-                                            <DropdownLink
-                                                :href="
-                                                    route(
-                                                        'teams.show',
-                                                        $page.props.auth.user
-                                                            .current_team
-                                                    )
-                                                "
-                                            >
-                                                Team Settings
-                                            </DropdownLink>
-
-                                            <DropdownLink
-                                                v-if="
-                                                    $page.props.jetstream
-                                                        .canCreateTeams
-                                                "
-                                                :href="route('teams.create')"
-                                            >
-                                                Create New Team
-                                            </DropdownLink>
-
-                                            <!-- Team Switcher -->
-                                            <template
-                                                v-if="
-                                                    $page.props.auth.user
-                                                        .all_teams.length > 1
-                                                "
-                                            >
-                                                <div
-                                                    class="border-t border-gray-200"
-                                                />
-
-                                                <div
-                                                    class="block px-4 py-2 text-xs text-gray-400"
-                                                >
-                                                    Switch Teams
-                                                </div>
-
-                                                <template
-                                                    v-for="team in $page.props
-                                                        .auth.user.all_teams"
-                                                    :key="team.id"
-                                                >
-                                                    <form
-                                                        @submit.prevent="
-                                                            switchToTeam(team)
-                                                        "
-                                                    >
-                                                        <DropdownLink
-                                                            as="button"
-                                                        >
-                                                            <div
-                                                                class="flex items-center"
-                                                            >
-                                                                <svg
-                                                                    v-if="
-                                                                        team.id ==
-                                                                        $page
-                                                                            .props
-                                                                            .auth
-                                                                            .user
-                                                                            .current_team_id
-                                                                    "
-                                                                    class="me-2 h-5 w-5 text-green-400"
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    fill="none"
-                                                                    viewBox="0 0 24 24"
-                                                                    stroke-width="1.5"
-                                                                    stroke="currentColor"
-                                                                >
-                                                                    <path
-                                                                        stroke-linecap="round"
-                                                                        stroke-linejoin="round"
-                                                                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                                                    />
-                                                                </svg>
-
-                                                                <div>
-                                                                    {{
-                                                                        team.name
-                                                                    }}
-                                                                </div>
-                                                            </div>
-                                                        </DropdownLink>
-                                                    </form>
-                                                </template>
-                                            </template>
-                                        </div>
-                                    </template>
-                                </Dropdown>
                             </div>
 
                             <!-- Settings Dropdown -->
@@ -296,6 +190,40 @@ const logout = () => {
 
                         <!-- Hamburger -->
                         <div class="-me-2 flex items-center sm:hidden">
+                            <div
+                                class="me-3 relative"
+                                @click="
+                                    showingNavigationCard =
+                                        !showingNavigationCard
+                                "
+                            >
+                                <span
+                                    :class="{
+                                        hidden: isUserHaveNotivegation(),
+                                    }"
+                                    class="flex absolute right-[-2px] top-[-5px] h-3 w-3"
+                                >
+                                    <span
+                                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
+                                    ></span>
+                                    <span
+                                        class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"
+                                    ></span>
+                                </span>
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    width="20"
+                                    height="20"
+                                    class="x19dipnz x1lliihq x1tzjh5l x1k90msu x2h7rmj x1qfuztq"
+                                    fill="white"
+                                >
+                                    <path
+                                        d="M3 9.5a9 9 0 1 1 18 0v2.927c0 1.69.475 3.345 1.37 4.778a1.5 1.5 0 0 1-1.272 2.295h-4.625a4.5 4.5 0 0 1-8.946 0H2.902a1.5 1.5 0 0 1-1.272-2.295A9.01 9.01 0 0 0 3 12.43V9.5zm6.55 10a2.5 2.5 0 0 0 4.9 0h-4.9z"
+                                    ></path>
+                                </svg>
+                            </div>
+                            <!--Notification card-->
+
                             <button
                                 class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
                                 @click="
@@ -507,3 +435,22 @@ const logout = () => {
         <BottomNavbar />
     </div>
 </template>
+<style>
+/*
+  Enter and leave animations can use different
+  durations and timing functions.
+*/
+.slide-fade-enter-active {
+    transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+    transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+    transform: translateX(20px);
+    opacity: 0;
+}
+</style>

@@ -8,9 +8,10 @@ use App\Models\Friend;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\FriendRequestNotification;
 
 class FriendController extends Controller
-{    
+{
     public function index()
     {
         $user = Auth::user();
@@ -52,13 +53,15 @@ class FriendController extends Controller
     public function sendRequest($friend_id)
     {
         $user = Auth::user();
+        $freind = User::find($friend_id);
         $friendship = Friend::create([
             'user_id' => $friend_id,
             'friend_id' => $user->id,
             'status' => 'pending'
         ]);
+        $freind->notify(new FriendRequestNotification($freind));
 
-        return redirect('/')->with('success', 'تم الارسال بنجاح');
+        return;
     }
 
     // accepted friend request

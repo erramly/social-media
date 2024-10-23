@@ -8,9 +8,6 @@ import storycards from "@/components/story/storycards.vue";
 
 import { onMounted, defineProps, ref } from "vue";
 
-onMounted(() => {
-    console.log(props.posts);
-});
 const isModalOpen = ref(false);
 const closeModal = () => {
     isModalOpen.value = isModalOpen.value ? false : true;
@@ -25,7 +22,9 @@ const props = defineProps([
 
 <template>
     <AppLayout title="Dashboard">
-        <CreatePost v-if="isModalOpen" @close="closeModal" />
+        <Transition name="slide-fade">
+            <CreatePost v-if="isModalOpen" @close="closeModal"
+        /></Transition>
         <div class="flex min-h-screen bg-gray-100">
             <main class="flex-1 p-6 w-full">
                 <div class="2xl:grid 2xl:grid-cols-3 2xl:gap-6 w-full">
@@ -52,7 +51,7 @@ const props = defineProps([
                             />
                             <!--=================================================================================================================================================================================================================================================================================================================================================================================-->
                         </div>
-                        <div>
+                        <div style="margin-bottom: 3rem">
                             <!--posts card-->
                             <postCard :posts="posts" :user="user" />
                         </div>

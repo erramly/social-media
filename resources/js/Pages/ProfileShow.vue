@@ -2,15 +2,28 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { defineProps } from "vue";
 import postCard from "@/components/postCard.vue";
-let props = defineProps(["posts", "user", "frindsCount"]);
+let props = defineProps(["posts", "user", "frindsCount","news"]);
 
 console.log(props.posts);
 console.log(props.user);
-console.log(props.frindsCount);
+console.log(props.news);
 
 let handlimgae = (e) => {
     return "http://localhost:8000/storage/" + e;
 };
+
+function copyText() {
+    const text = window.location.href; // الحصول على الرابط الكامل للصفحة الحالية
+
+    navigator.clipboard
+        .writeText(text)
+        .then(() => {
+            alert("copy profle link: " + text);
+        })
+        .catch((err) => {
+            console.error("فشل النسخ: ", err);
+        });
+}
 </script>
 <template>
     <AppLayout>
@@ -26,11 +39,11 @@ let handlimgae = (e) => {
                 <div class="profile-actions">
                     <button
                         class="add-friend"
-                        v-if="!user.id != $page.props.auth.user.id"
+                        v-if="user.id != $page.props.auth.user.id"
                     >
                         Add Friend
                     </button>
-                    <a :href="`/chatify/${user.id}`">
+                    <a :href="`/messages/${user.id}`">
                         <button
                             class="message"
                             v-if="user.id != $page.props.auth.user.id"
@@ -44,11 +57,28 @@ let handlimgae = (e) => {
                     >
                         •••
                     </button>
+                    <button
+                        @click="copyText"
+                        class="more p-4 text-[#1d4ed8] bg-indigo-200"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="size-6"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"
+                            />
+                        </svg>
+                    </button>
                 </div>
                 <nav class="profile-nav">
-                    <a href="#"
-                        >Posts</a
-                    >
+                    <a href="#">Posts</a>
                 </nav>
             </div>
             <!--posts card-->
@@ -57,7 +87,7 @@ let handlimgae = (e) => {
     </AppLayout>
 </template>
 
-<style>
+<style scoped>
 /* Reset and base styles */
 * {
     margin: 0;
@@ -145,6 +175,10 @@ main {
     left: 20px;
     background-color: #e4e6eb;
     overflow: hidden;
+}
+.profile-photo img {
+    object-fit: cover;
+    width: 100%;
 }
 .profile-info {
     background-color: #ffffff;

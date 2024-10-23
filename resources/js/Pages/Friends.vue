@@ -4,17 +4,20 @@ import { useFriendRequest } from "@/composables/useFriendRequest";
 
 import { onMounted, defineProps } from "vue";
 
-const props = defineProps(["friends_request"]);
-
-onMounted(() => {
-    console.log(props.friends_request);
-});
+const props = defineProps(["friends_request", "friendsRecommend"]);
 
 
-const { acceptFriendRequest } = useFriendRequest();
+
+const { acceptFriendRequest, sendToFriendRequest } = useFriendRequest();
 
 const handleAcceptFriend = (friend_id, status) => {
     acceptFriendRequest(friend_id, status);
+};
+//send frend id
+
+const handlesendToFriend = (friend_id) => {
+
+    sendToFriendRequest(friend_id);
 };
 </script>
 
@@ -40,10 +43,56 @@ const handleAcceptFriend = (friend_id, status) => {
                             {{ friend.info_friend.email }}
                         </p>
                         <div class="button-group">
-                            <button class="button add-friend" @click="handleAcceptFriend(friend.info_friend.id,'accepted')">
+                            <button
+                                class="button add-friend"
+                                @click="
+                                    handleAcceptFriend(
+                                        friend.info_friend.id,
+                                        'accepted'
+                                    )
+                                "
+                            >
                                 Add Friend
                             </button>
-                            <button class="button decline" @click="handleAcceptFriend(friend.info_friend.id,'declined')">Decline</button>
+                            <button
+                                class="button decline"
+                                @click="
+                                    handleAcceptFriend(
+                                        friend.info_friend.id,
+                                        'declined'
+                                    )
+                                "
+                            >
+                                Decline
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <h1>friends Recommend</h1>
+            <div class="recommendations">
+                <div
+                    class="friend-card"
+                    v-for="(friend, index) in friendsRecommend"
+                    :key="index"
+                >
+                    <img :src="friend.profile_photo_url" alt="Alex Johnson" />
+                    <div class="friend-info">
+                        <h2 class="friend-name">
+                            {{ friend.name }}
+                        </h2>
+                        <p class="friend-username">
+                            {{ friend.email }}
+                        </p>
+                        <div class="button-group">
+                            <button
+                                class="button add-friend"
+                                @click="handlesendToFriend(friend.id)"
+                            >
+                                send
+                            </button>
                         </div>
                     </div>
                 </div>

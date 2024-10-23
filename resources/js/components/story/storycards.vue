@@ -127,4 +127,14 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+@media screen and (max-width: 500px) {
+    .story {
+        width: 90px;
+        margin-right: 10px;
+    }
+    .story-avatar {
+        width: 85px;
+        height: 85px;
+    }
+}
 </style>

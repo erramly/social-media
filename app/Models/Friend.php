@@ -16,7 +16,7 @@ class Friend extends Model
     }
     public function getInfoFriendAttribute()
     {
-        return $this->friend; // جلب بيانات الصديق من العلاقة الأصلية
+        return $this->friend; 
     }
     protected $hidden = ['friend'];
 

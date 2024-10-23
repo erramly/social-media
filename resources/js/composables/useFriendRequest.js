@@ -7,8 +7,12 @@ export function useFriendRequest() {
             status: status,
         });
     };
+    const sendToFriendRequest = (friend_id) => {
+        Inertia.post(`/friend-request/send/${friend_id}`);
+    };
 
     return {
         acceptFriendRequest,
+        sendToFriendRequest
     };
 }

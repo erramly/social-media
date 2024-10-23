@@ -125,26 +125,9 @@
                     </svg>
                     marketplace
                 </a>
-                <a class="flex items-center gap-2" href="#" rel="ugc">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="w-5 h-5"
-                    >
-                        <path
-                            d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"
-                        ></path>
-                        <polyline points="10 17 15 12 10 7"></polyline>
-                        <line x1="15" x2="3" y1="12" y2="12"></line>
-                    </svg>
-                    Subscription
+                <a href="/messages" rel="ugc" class="flex items-center gap-2">
+                    <i class="fa-regular fa-comments text-[20px]"></i>
+                    Messages
                 </a>
                 <a class="flex items-center gap-2" href="#" rel="ugc">
                     <svg
@@ -191,27 +174,9 @@
                 </a>
             </nav>
         </div>
-        <div class="mt-auto">
-            <button
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 w-full mb-4"
-            >
-                Go Pro
-            </button>
-            <div class="flex items-center gap-2">
-                <span
-                    class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
-                >
-                    <img
-                        class="aspect-square h-full w-full"
-                        alt="Azunyan U. Wu"
-                        src="https://v0.dev/placeholder-user.jpg"
-                    />
-                </span>
-                <div>
-                    <p>Azunyan U. Wu</p>
-                    <p class="text-sm text-gray-300">Basic Member</p>
-                </div>
-            </div>
-        </div>
+      
     </aside>
 </template>
+<style scoped>
+
+</style>

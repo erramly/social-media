@@ -1,6 +1,7 @@
 <script setup>
 import { Inertia } from "@inertiajs/inertia";
 import { ref } from "vue";
+import { router } from "@inertiajs/vue3";
 
 let comment = ref([]);
 defineProps(["posts", "user"]);
@@ -53,22 +54,18 @@ const formatDate = (dateString) => {
     return date.toLocaleString("en-MA", options);
 };
 const addLike = (post_id) => {
-    Inertia.post(
+    router.post(
         "/like/add",
         { post_id: post_id },
         {
-            preserveScroll: true, // للحفاظ على التمرير الحالي
-            only: ["posts"], // يقوم بتحديث البيانات الخاصة بالمنشورات فقط
-            onSuccess: () => {
-                console.log("تمت العملية بنجاح!");
-            },
+            preserveScroll: true, 
         }
     );
 };
 const addComment = (user_id, post_id, comment) => {
     console.warn(user_id, post_id, comment);
 
-    Inertia.post(
+    router.post(
         "/comment/add",
         {
             user_id: user_id,
@@ -78,15 +75,13 @@ const addComment = (user_id, post_id, comment) => {
         {
             preserveScroll: true,
             only: ["posts"],
-            onSuccess: () => {
-                console.log("تمت العملية بنجاح!");
-            },
         }
     );
+    return "";
 };
 
 const removeComment = (comment_id) => {
-    Inertia.post(
+    router.post(
         "/comment/delete",
         {
             comment_id: comment_id,
@@ -101,7 +96,7 @@ const removeComment = (comment_id) => {
 };
 
 const removePost = (Post_id) => {
-    Inertia.post(
+    router.post(
         "/post/remove",
         {
             Post_id: Post_id,
@@ -116,10 +111,8 @@ const removePost = (Post_id) => {
 };
 
 const showCommetsCards = (index) => {
-    console.log(index);
 
     let commetEle = document.querySelectorAll(".comments-cards")[index];
-    console.log(commetEle);
     commetEle.classList.toggle("comments-show");
 };
 </script>
@@ -151,7 +144,7 @@ const showCommetsCards = (index) => {
                             >
 
                             <p
-                                class="text-sm text-muted-foreground"
+                                class="text-sm text-muted-foreground text-[#9f9e9e]"
                                 data-id="48"
                             >
                                 {{ formatDate(post.updated_at) }}
@@ -161,7 +154,7 @@ const showCommetsCards = (index) => {
                     <button
                         v-if="$page.props.auth.user.id == post.user.id"
                         @click="removePost(post.id)"
-                        class="rounded-full group flex items-center justify-center focus-within:outline-red-500 float-end ml-2"
+                        class="rounded-full group flex items-start justify-start focus-within:outline-red-500 ml-2"
                     >
                         <svg
                             width="34"
@@ -271,12 +264,12 @@ const showCommetsCards = (index) => {
                     </div>
                 </div>
                 <div class="flex items-center gap-3 mt-2">
-                    <input
+                    <textarea
                         v-model="comment[index]"
                         class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                         placeholder="Write your comment..."
                         data-id="60"
-                    />
+                    ></textarea>
                     <div
                         @click="addComment(user.id, post.id, comment[index])"
                         class="bg-blue-700 rounded-md border p-2 cursor-pointer h-full"
@@ -309,13 +302,18 @@ const showCommetsCards = (index) => {
         </div>
         <!--commetns-->
         <div
-            class="comments-cards p-5 bg-gray-300 comments-show"
-            v-if="post.comments.length > 0"
+            class="comments-cards p-5 bg-gray-300 comments-show bg-gradient-to-r from-violet-500 to-fuchsia-500"
         >
+            <h1
+                v-if="post.comments.length == 0"
+                class="text-xl font-medium text-slate-900 text-center"
+            >
+                not found any comment in this post
+            </h1>
             <div
                 v-for="(comment, index) in post.comments"
                 :key="index"
-                class="text-card-foreground shadow-sm bg-white border border-muted rounded-lg p-4 mb-2 h-fit"
+                class="text-card-foreground shadow-sm bg-white border border-muted rounded-lg pb-8 pt-4 px-4 mb-2 h-fit"
                 data-v0-t="card"
             >
                 <button
