@@ -11,12 +11,4 @@ class NotificationController extends Controller
     {
         auth()->user()->unreadNotifications->markAsRead();
     }
-    //show notifaction of user outh
-    public function showAllNotification()
-    {
-
-        $notifications = auth()->user()->notifications;
-
-        return response()->json(["data" => $notifications]);
-    }
 }

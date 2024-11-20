@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
 import ApplicationMark from "@/Components/ApplicationMark.vue";
 import Banner from "@/Components/Banner.vue";
@@ -31,9 +31,6 @@ const isUserHaveNotivegation = () => {
     return !page.props.auth.notifications.length > 0;
 };
 
-onMounted(() => {
-    console.log(isUserHaveNotivegation());
-});
 const logout = () => {
     router.post(route("logout"));
 };

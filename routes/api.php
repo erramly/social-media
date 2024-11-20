@@ -5,8 +5,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\StoryController;
+// contoller 
 use App\Http\Controllers\FriendController;
-// api 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\NotificationController;
@@ -46,15 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('posts', PostController::class);
 });
 
-//Notifiction controller===================================================
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get("/show-notification", [NotificationController::class, "showAllNotification"]);
-    Route::post("/read-notification", [NotificationController::class, "readAllNotification"]);
-});
-
-
-//routes/api.php
 
 
 

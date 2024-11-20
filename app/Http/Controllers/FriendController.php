@@ -16,39 +16,84 @@ class FriendController extends Controller
     {
         $user = Auth::user();
 
+        // Fetch pending friend requests for the current user
+        $friendsOrders = $this->getPendingFriendRequests($user->id);
 
-        $friendsOrders = Friend::where("user_id", $user->id)
+        // Fetch friend recommendations
+        $friendsRecommend = $this->getFriendRecommendations($user->id);
+
+        $userFriends = $this->getFriendUser($user->id);
+
+        // Render this data in Friends page (Home.vue)
+        return Inertia::render('Friends', [
+            'user' => $user,
+            'userFriends'=>$userFriends,
+            'friends_request' => $friendsOrders,
+            'friendsRecommend' => $friendsRecommend,
+        ]);
+    }
+
+    /**
+     * Get pending friend requests for the user
+     */
+    private function getPendingFriendRequests($userId)
+    {
+        return Friend::where("user_id", $userId)
             ->where("status", 'pending')
             ->with('friend')
             ->get();
-
-        //recommed friends ========================================================================================================
-        // جلب جميع العلاقات حيث يكون المستخدم هو user_id
-        $friendIdsAsUser = DB::table('friends')
-            ->where('user_id', $user->id)
-            ->pluck('friend_id') // جلب friend_id المرتبطة بالمستخدم
-            ->toArray(); // تحويل النتائج إلى مصفوفة
-
-        // جلب جميع العلاقات حيث يكون المستخدم هو friend_id
-        $friendIdsAsFriend = DB::table('friends')
-            ->where('friend_id', $user->id)
-            ->pluck('user_id') // جلب user_id المرتبطة بالمستخدم
-            ->toArray(); // تحويل النتائج إلى مصفوفة
-
-
-        $friendNotRelationWithUser = array_merge($friendIdsAsUser, $friendIdsAsFriend);
-
-        $friendsRecommend = User::whereNotIn('id', $friendNotRelationWithUser)
-            ->where('id', '!=', $user->id) // استثناء المستخدم الحالي من التوصيات
-            ->get();
-        //=========================================================================================================================
-        // render this data in home page vue page name is : Home.vue
-        return Inertia::render('Friends', [
-            'user' => $user,
-            'friends_request' => $friendsOrders,
-            'friendsRecommend' => $friendsRecommend
-        ]);
     }
+
+    /**
+     * Get recommended friends for the user (not currently friends with)
+     */
+    private function getFriendRecommendations($userId)
+    {
+        // Get friends where the user is the 'user_id'
+        $friendIdsAsUser = DB::table('friends')
+            ->where('user_id', $userId)
+            ->pluck('friend_id')
+            ->toArray();
+
+        // Get friends where the user is the 'friend_id'
+        $friendIdsAsFriend = DB::table('friends')
+            ->where('friend_id', $userId)
+            ->pluck('user_id')
+            ->toArray();
+
+        // Merge both results to get all friends' IDs
+        $allFriendIds = array_merge($friendIdsAsUser, $friendIdsAsFriend);
+
+        // Fetch users who are not currently friends with the user
+        return User::whereNotIn('id', $allFriendIds)
+            ->where('id', '!=', $userId) // Exclude the current user
+            ->get();
+    }
+    private function getFriendUser($userId)
+    {
+        // Get friends where the user is the 'user_id'
+        $friendIdsAsUser = DB::table('friends')
+            ->where('user_id', $userId)
+            ->where('status', "accepted")
+            ->pluck('friend_id')
+            ->toArray();
+
+        // Get friends where the user is the 'friend_id'
+        $friendIdsAsFriend = DB::table('friends')
+            ->where('friend_id', $userId)
+            ->where('status', "accepted")
+            ->pluck('user_id')
+            ->toArray();
+
+        // Merge both results to get all friends' IDs
+        $allFriendIds = array_merge($friendIdsAsUser, $friendIdsAsFriend);
+
+        // Fetch users who are not currently friends with the user
+        return User::whereIn('id', $allFriendIds)
+            ->where('id', '!=', $userId) // Exclude the current user
+            ->get();
+    }
+
     // send request friend
     public function sendRequest($friend_id)
     {
@@ -59,7 +104,7 @@ class FriendController extends Controller
             'friend_id' => $user->id,
             'status' => 'pending'
         ]);
-        $freind->notify(new FriendRequestNotification($freind));
+        $freind->notify(new FriendRequestNotification($user));
 
         return;
     }

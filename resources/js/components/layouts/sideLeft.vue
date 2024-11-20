@@ -27,27 +27,57 @@
         </div>
         <div class="space-y-4">
             <div class="relative">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="absolute left-2 top-2.5 w-4 h-4 text-gray-400"
+                <!--search bar-->
+                <div>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="absolute left-2 top-2.5 w-4 h-4 text-gray-400"
+                    >
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.3-4.3"></path>
+                    </svg>
+                    <input
+                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-8"
+                        placeholder="Search"
+                        type="search"
+                    />
+                </div>
+                <!--search reasult-->
+                <div
+                    id="dropdown"
+                    class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 hidden"
+                    data-popper-placement="bottom"
+                    style="
+                        position: absolute;
+                        inset: 0px auto auto 0px;
+                        margin: 0px;
+                        transform: translate(0px, 3rem);
+                    "
                 >
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <path d="m21 21-4.3-4.3"></path>
-                </svg>
-                <input
-                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-8"
-                    placeholder="Search"
-                    type="search"
-                />
+                    <ul
+                        class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                        aria-labelledby="dropdown-button"
+                    >
+                        <li v-for="item in 6">
+                            <button
+                                type="button"
+                                class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                            >
+                                Mockups
+                            </button>
+                        </li>
+                    </ul>
+                </div>
             </div>
+            <!--side links-->
             <nav class="space-y-2">
                 <a class="flex items-center gap-2" href="#" rel="ugc">
                     <svg
@@ -129,7 +159,7 @@
                     <i class="fa-regular fa-comments text-[20px]"></i>
                     Messages
                 </a>
-                <a class="flex items-center gap-2" href="#" rel="ugc">
+                <a class="flex items-center gap-2" href="/user/profile" rel="ugc">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -174,9 +204,6 @@
                 </a>
             </nav>
         </div>
-      
     </aside>
 </template>
-<style scoped>
-
-</style>
+<style scoped></style>

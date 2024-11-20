@@ -1,5 +1,5 @@
 <script setup>
-import { usePage } from "@inertiajs/vue3";
+import { usePage, router } from "@inertiajs/vue3";
 import { ref, onMounted } from "vue";
 
 const page = usePage();
@@ -7,10 +7,12 @@ const page = usePage();
 const notifications = ref([]);
 const fetchNotifications = async () => {
     notifications.value = page.props.auth.notifications;
-
-    console.log(page.props.auth.notifications);
+    console.log(notifications.value);
 };
-
+const markBeSeen = () => {
+    router.post("/read-notification");
+    notifications.value = [];
+};
 onMounted(() => {
     fetchNotifications();
 });
@@ -40,11 +42,11 @@ onMounted(() => {
                 You have {{ notifications.length }} unread notifications
             </p>
         </div>
-        <div class="card-content">
+        <div class="card-content" v-if="notifications.length > 0">
             <div
                 class="notification"
                 v-for="notification in notifications"
-                :key="item"
+                :key="notification"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -69,8 +71,10 @@ onMounted(() => {
                 </div>
             </div>
         </div>
-        <div class="card-footer">
-            <button class="view-all-button">mark all notifications</button>
+        <div class="card-footer" v-if="notifications.length > 0">
+            <button class="view-all-button" @click="markBeSeen()">
+                mark all notifications
+            </button>
         </div>
     </div>
 </template>

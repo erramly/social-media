@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Inertia\Inertia;
 use App\Models\Friend;
+use App\Models\Story;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -30,13 +31,13 @@ class PostController extends Controller
         // الحصول على معرفات الأصدقاء الذين لديهم علاقة بالمستخدم الحالي
         $friendIdsAsUserPosts = DB::table('friends')
             ->where('user_id', $user->id)
-            ->where('status', 'accepted') // التأكد من أن العلاقة مقبولة
+            ->where('status', 'accepted')
             ->pluck('friend_id')
             ->toArray();
 
         $friendIdsAsFriendPosts = DB::table('friends')
             ->where('friend_id', $user->id)
-            ->where('status', 'accepted') // التأكد من أن العلاقة مقبولة
+            ->where('status', 'accepted')
             ->pluck('user_id')
             ->toArray();
 
@@ -48,8 +49,8 @@ class PostController extends Controller
 
         // الحصول على المشاركات من الأصدقاء والمستخدم الحالي
         $posts = Post::whereIn('user_id', $allFriendIds)
-            ->with(['user', 'likes', 'comments.user']) // جلب المستخدمين والإعجابات والتعليقات
-            ->latest() // الحصول على المشاركات بترتيب آخر تاريخ
+            ->with(['user', 'likes', 'comments.user']) // get users & likes & comments
+            ->latest() // get last 
             ->get();
 
 
@@ -72,10 +73,25 @@ class PostController extends Controller
         $friendsRecommend = User::whereNotIn('id', $friendNotRelationWithUser)
             ->where('id', '!=', $user->id) // استثناء المستخدم الحالي من التوصيات
             ->get();
-        //=========================================================================================================================
+        //get stories  user story and his friends user=========================================================================================================================
+        // get user stories
+        $userStories = Story::where('user_id', $user->id)
+            ->latest()
+            ->with('user')
+            ->first();
+        // get stories friends
+        $friendStories = Story::whereIn('user_id', $allFriendIds)
+            ->where('user_id', '!=', $user->id) // delete user auth from query
+            ->with('user')
+            ->latest()
+            ->get();
+
+
         // render this data in home page vue page name is : Home.vue
         return Inertia::render('Home', [
             'user' => $user,
+            'user_stories' => $userStories,
+            'friend_stories' => $friendStories,
             'posts' => $posts,
             'friends_request' => $friendsOrders,
             'friendsRecommend' => $friendsRecommend
@@ -83,7 +99,7 @@ class PostController extends Controller
     }
 
     /**
-     * تخزين منشور جديد.
+     * save new post
      */
     public function store(Request $request)
     {
@@ -113,7 +129,7 @@ class PostController extends Controller
     }
 
     /**
-     * عرض منشور معين.
+     * get one post
      */
     public function show($id)
     {
@@ -124,7 +140,7 @@ class PostController extends Controller
     }
 
     /**
-     * عرض نموذج تعديل المنشور.
+     * edite post
      */
     public function edit($id)
     {
@@ -164,7 +180,7 @@ class PostController extends Controller
     }
 
     /**
-     * حذف المنشور.
+     * delet post
      */
     public function destroy(Request $request)
     {

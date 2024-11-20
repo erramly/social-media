@@ -68,7 +68,7 @@ const now = computed(() => Date.now());
                     >
                         <img
                             class="aspect-square h-full w-full"
-                            alt="@shadcn"
+                            alt="profile photo"
                             :src="$page.props.auth.user.profile_photo_url"
                         />
                     </span>

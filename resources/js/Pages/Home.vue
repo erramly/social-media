@@ -1,12 +1,12 @@
 <script setup>
+import { defineProps, ref } from "vue";
+
 import AppLayout from "@/Layouts/AppLayout.vue";
 import postCard from "@/components/postCard.vue";
 import showFriendsRequest from "@/components/friends/showFriendsRequest.vue";
 import friendsRecommendComponent from "@/components/friends/friendsRecommend.vue";
 import CreatePost from "@/components/modals/CreatePost.vue";
 import storycards from "@/components/story/storycards.vue";
-
-import { onMounted, defineProps, ref } from "vue";
 
 const isModalOpen = ref(false);
 const closeModal = () => {
@@ -17,11 +17,13 @@ const props = defineProps([
     "friends_request",
     "user",
     "friendsRecommend",
+    "user_stories",
+    "friend_stories",
 ]);
 </script>
 
 <template>
-    <AppLayout title="Dashboard">
+    <AppLayout title="Home">
         <Transition name="slide-fade">
             <CreatePost v-if="isModalOpen" @close="closeModal"
         /></Transition>
@@ -29,7 +31,7 @@ const props = defineProps([
             <main class="flex-1 p-6 w-full">
                 <div class="2xl:grid 2xl:grid-cols-3 2xl:gap-6 w-full">
                     <div class="col-span-2 space-y-6">
-                        <storycards />
+                        <storycards :user_stories="user_stories" :friend_stories="friend_stories" />
 
                         <div
                             class="flex items-center w-full m-auto bg-white p-6 rounded-xl"

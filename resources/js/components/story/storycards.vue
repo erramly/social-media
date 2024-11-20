@@ -1,22 +1,62 @@
+<script setup>
+import { defineProps, ref } from "vue";
+import createStory from "./createStory.vue";
+import showStory from "./showStory.vue";
+const isModalOpen = ref(false);
+const isModalOpenShowStory = ref(false);
+const dataOfStorySelected = ref("");
+
+const closeOrOpenModal = () => {
+    isModalOpen.value = isModalOpen.value ? false : true;
+};
+const closeOrOpenModalShowStory = (story) => {
+    console.log(story);
+
+    isModalOpenShowStory.value = isModalOpenShowStory.value ? false : true;
+    dataOfStorySelected.value = handlImageUrl(story.media_path);
+};
+const props = defineProps(["user_stories", "friend_stories"]);
+
+console.log(props.user_stories);
+console.log(props.friend_stories);
+
+const handlImageUrl = (url) => {
+    return "http://localhost:8000/storage/" + url;
+};
+</script>
 <template>
+    <createStory v-if="isModalOpen" @close="closeOrOpenModal" />
+    <showStory
+        :story="dataOfStorySelected"
+        v-if="isModalOpenShowStory"
+        @close="closeOrOpenModalShowStory"
+    />
     <div class="stories-container w-full">
         <div class="stories-scroll">
             <!--add story-->
             <div class="story">
                 <div class="story-avatar">
-                    <div class="story-add">
+                    <div class="story-add" @click="closeOrOpenModal">
                         <span class="story-add-icon">+</span>
                     </div>
                     <img
-                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXJA32WU4rBpx7maglqeEtt3ot1tPIRWptxA&s"
+                        :src="handlImageUrl(user_stories.media_path)"
+                        @click="closeOrOpenModalShowStory(user_stories)"
                         alt="Your Story"
-                        class="story-img"
+                        class="story-img blur-sm"
                     />
                     <div class="story-border"></div>
                 </div>
-                <div class="story-name">Your Story</div>
+                <div class="story-name">
+                    {{ user_stories.user.name }}
+                </div>
             </div>
-            <div class="story" v-for="story in 10" :key="story">
+            <div
+                class="story"
+                v-for="story in friend_stories"
+                :key="story"
+                @click="closeOrOpenModalShowStory(story)"
+            >
                 <div class="story-avatar">
                     <div class="story-border"></div>
                     <img
@@ -25,7 +65,7 @@
                         class="story-img"
                     />
                 </div>
-                <div class="story-name">Emily Johnson</div>
+                <div class="story-name">{{ story.user.name }}</div>
             </div>
         </div>
     </div>

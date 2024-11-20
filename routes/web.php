@@ -6,9 +6,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\StoryController;
 use App\Http\Controllers\FriendController;
-use App\Http\Controllers\CommentController;
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\NotificationController;
 
@@ -71,6 +72,20 @@ Route::middleware('auth:sanctum')->group(function () {
 
 //Profile controller ===================================================
 Route::get("/profileshow/{id}", [ProfileController::class, "show"]);
+
+
+//Notifiction 
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post("/read-notification", [NotificationController::class, "readAllNotification"]);
+});
+// story controller===================================================
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/stories', [StoryController::class, 'index']);
+    Route::post('/create-story', [StoryController::class, 'store']);
+});
+
 
 
 
