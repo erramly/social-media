@@ -31,11 +31,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/signup', [UserController::class, 'store']);
 
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
+// Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+//     $request->fulfill();
 
-    return response()->json(['message' => 'Email verified successfully']);
-})->middleware(['auth.session', 'signed'])->name('verification.verify');
+//     return response()->json(['message' => 'Email verified successfully']);
+// })->middleware(['auth.session', 'signed'])->name('verification.verify');
 
 
 //page profile 

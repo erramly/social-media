@@ -30,15 +30,10 @@ function timeAgo(dateString) {
 
     return "just now"; // إذا كان الوقت الآن هو نفس التاريخ أو قريب جداً
 }
-function handlimg(url) {
-    if (url) {
-        if (url.startsWith("http://") || url.startsWith("https://")) {
-            return url;
-        }
-        return "http://localhost:8000/storage/" + url;
-    }
-    return url;
-}
+const handlimg = (url) => {
+    const baseUrl = `${window.location.origin}/storage/`;
+    return baseUrl + url;
+};
 
 const formatDate = (dateString) => {
     const options = {
@@ -57,7 +52,7 @@ const addLike = (post_id) => {
         "/like/add",
         { post_id: post_id },
         {
-            preserveScroll: true, 
+            preserveScroll: true,
         }
     );
 };
@@ -110,13 +105,12 @@ const removePost = (Post_id) => {
 };
 
 const showCommetsCards = (index) => {
-
     let commetEle = document.querySelectorAll(".comments-cards")[index];
     commetEle.classList.toggle("comments-show");
 };
 </script>
 <template>
-    <div v-for="(post, index) in posts" :key="index">
+    <!-- <div v-for="(post, index) in posts" :key="index">
         <div
             class="flex gap-2 p-4 bg-white rounded-md shadow mt-3"
             data-id="42"
@@ -299,26 +293,195 @@ const showCommetsCards = (index) => {
                 </div>
             </div>
         </div>
+    </div> -->
+    <div
+        v-for="(post, index) in posts"
+        :key="index"
+        class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm mt-4"
+    >
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-3">
+                <img
+                    alt="User Avatar"
+                    loading="lazy"
+                    width="40"
+                    height="40"
+                    decoding="async"
+                    class="rounded-full"
+                    :src="
+                        post.user.profile_photo_url ||
+                        'https://ui-avatars.com/api/?name=i&color=7F9CF5&background=EBF4FF'
+                    "
+                />
+                <div>
+                    <h3 class="font-medium text-white">{{ post.user.name }}</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        {{ formatDate(post.updated_at) }}
+                    </p>
+                </div>
+            </div>
+            <button
+                v-if="$page.props.auth.user.id == post.user.id"
+                @click="removePost(post.id)"
+                class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-trash2 w-5 h-5"
+                >
+                    <path d="M3 6h18"></path>
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                    <line x1="10" x2="10" y1="11" y2="17"></line>
+                    <line x1="14" x2="14" y1="11" y2="17"></line>
+                </svg>
+            </button>
+        </div>
+        <p class="mb-4 text-white">{{ post.title }}</p>
+        <p class="text-blue-500">{{ post.content }}</p>
+        <img
+            v-if="post.image"
+            :src="handlimg(post.image)"
+            class="w-full h-auto mt-2 rounded-md"
+            alt="Post Image"
+            width="400"
+            height="200"
+            style="aspect-ratio: 400 / 200; object-fit: cover"
+        />
+
+        <div>
+            <div
+                class="flex mt-4 items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700"
+            >
+                <button
+                    class="flex items-center gap-2 text-gray-500 hover:text-indigo-600"
+                    @click="addLike(post.id)"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-thumbs-up w-5 h-5"
+                    >
+                        <path d="M7 10v12"></path>
+                        <path
+                            d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z"
+                        ></path>
+                    </svg>
+                    <span>{{ post.likes.length }} Likes</span>
+                </button>
+                <button
+                    @click="showCommetsCards(index)"
+                    class="flex items-center gap-2 text-gray-500 hover:text-indigo-600"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-message-circle w-5 h-5"
+                    >
+                        <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path>
+                    </svg>
+                    <span>{{ post.comments.length }} Comments</span>
+                </button>
+                <button
+                    class="flex items-center gap-2 text-gray-500 hover:text-indigo-600"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-share2 w-5 h-5"
+                    >
+                        <circle cx="18" cy="5" r="3"></circle>
+                        <circle cx="6" cy="12" r="3"></circle>
+                        <circle cx="18" cy="19" r="3"></circle>
+                        <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"></line>
+                        <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"></line>
+                    </svg>
+                    <span>Share</span>
+                </button>
+            </div>
+            <div class="flex items-center gap-3 mt-4">
+                <textarea
+                    v-model="comment[index]"
+                    class="flex h-10 w-full rounded-[16px] border border-input bg-gray-600 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    placeholder="Write your comment..."
+                    data-id="60"
+                ></textarea>
+                <div
+                    @click="addComment(user.id, post.id, comment[index])"
+                    class="bg-blue-700 rounded-[99px] p-2 cursor-pointer h-full"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        fill="#fff"
+                        height="20px"
+                        width="20px"
+                        version="1.1"
+                        id="Capa_1"
+                        viewBox="0 0 495.003 495.003"
+                        xml:space="preserve"
+                    >
+                        <g id="XMLID_51_">
+                            <path
+                                id="XMLID_53_"
+                                d="M164.711,456.687c0,2.966,1.647,5.686,4.266,7.072c2.617,1.385,5.799,1.207,8.245-0.468l55.09-37.616   l-67.6-32.22V456.687z"
+                            />
+                            <path
+                                id="XMLID_52_"
+                                d="M492.431,32.443c-1.513-1.395-3.466-2.125-5.44-2.125c-1.19,0-2.377,0.264-3.5,0.816L7.905,264.422   c-4.861,2.389-7.937,7.353-7.904,12.783c0.033,5.423,3.161,10.353,8.057,12.689l125.342,59.724l250.62-205.99L164.455,364.414   l156.145,74.4c1.918,0.919,4.012,1.376,6.084,1.376c1.768,0,3.519-0.322,5.186-0.977c3.637-1.438,6.527-4.318,7.97-7.956   L494.436,41.257C495.66,38.188,494.862,34.679,492.431,32.443z"
+                            />
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
         <!--commetns-->
-        <div
-            class="comments-cards p-5 bg-gray-300 comments-show bg-gradient-to-r from-violet-500 to-fuchsia-500"
-        >
+        <div class="comments-cards p-5 comments-show mt-4">
             <h1
                 v-if="post.comments.length == 0"
-                class="text-xl font-medium text-slate-900 text-center"
+                class="text-xl font-medium text-slate-900 text-center text-gray-200"
             >
                 not found any comment in this post
             </h1>
             <div
                 v-for="(comment, index) in post.comments"
                 :key="index"
-                class="text-card-foreground shadow-sm bg-white border border-muted rounded-lg pb-8 pt-4 px-4 mb-2 h-fit"
+                class="text-card-foreground bg-gray-700 shadow-sm rounded-lg pb-8 pt-4 px-4 mb-2 h-fit"
                 data-v0-t="card"
             >
                 <button
                     v-if="$page.props.auth.user.id == comment.user.id"
                     @click="removeComment(comment.id)"
-                    class="rounded-full group flex items-center justify-center focus-within:outline-red-500 float-end ml-2"
+                    class="rounded-full group flex items-center justify-center outline-white float-end ml-2"
                 >
                     <svg
                         width="34"
@@ -355,19 +518,23 @@ const showCommetsCards = (index) => {
                         /></span>
                     </span>
                     <div class="flex-1 space-y-2">
-                        <div class="flex items-center justify-between">
+                        <div
+                            class="flex items-center justify-between text-white"
+                        >
                             <div class="font-medium">
                                 {{ comment.user.name }}
                             </div>
                         </div>
                         <div
-                            class="text-muted-foreground text-gray-500 text-content overflow-hidden"
+                            class="text-muted-foreground text-gray-300 text-content overflow-hidden"
                         >
                             {{ comment.content }}
                         </div>
                     </div>
                 </div>
-                <div class="text-xs text-muted-foreground float-end pb-6">
+                <div
+                    class="text-sm text-muted-foreground float-end pb-6 text-gray-400"
+                >
                     {{ timeAgo(comment.created_at) }}
                 </div>
             </div>
@@ -377,5 +544,14 @@ const showCommetsCards = (index) => {
 <style scoped>
 .comments-show {
     display: none;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: inherit !important;
+    font-weight: inherit;
 }
 </style>

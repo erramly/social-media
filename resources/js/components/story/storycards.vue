@@ -10,18 +10,14 @@ const closeOrOpenModal = () => {
     isModalOpen.value = isModalOpen.value ? false : true;
 };
 const closeOrOpenModalShowStory = (story) => {
-    console.log(story);
-
     isModalOpenShowStory.value = isModalOpenShowStory.value ? false : true;
     dataOfStorySelected.value = handlImageUrl(story.media_path);
 };
 const props = defineProps(["user_stories", "friend_stories"]);
 
-console.log(props.user_stories);
-console.log(props.friend_stories);
-
 const handlImageUrl = (url) => {
-    return "http://localhost:8000/storage/" + url;
+    const baseUrl = `${window.location.origin}/storage/`;
+    return baseUrl + url;
 };
 </script>
 <template>
@@ -31,8 +27,8 @@ const handlImageUrl = (url) => {
         v-if="isModalOpenShowStory"
         @close="closeOrOpenModalShowStory"
     />
-    <div class="stories-container w-full">
-        <div class="stories-scroll">
+    <div class="stories-container">
+        <div class="stories-scroll bg-gray-800">
             <!--add story-->
             <div class="story">
                 <div class="story-avatar">
@@ -40,19 +36,27 @@ const handlImageUrl = (url) => {
                         <span class="story-add-icon">+</span>
                     </div>
                     <img
+                        v-if="user_stories"
                         :src="handlImageUrl(user_stories.media_path)"
                         @click="closeOrOpenModalShowStory(user_stories)"
                         alt="Your Story"
                         class="story-img blur-sm"
                     />
+                    <img
+                        v-else
+                        class="story-img blur-sm"
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYZr91E9OoEEu2OOq0v17IAfbXucVOcNbUPw&s"
+                        alt="story photo"
+                    />
                     <div class="story-border"></div>
                 </div>
                 <div class="story-name">
-                    {{ user_stories.user.name }}
+                    {{ $page.props.auth.user.name }}
                 </div>
             </div>
             <div
-                class="story"
+                v-if="friend_stories"
+                class="story stories-containerf"
                 v-for="story in friend_stories"
                 :key="story"
                 @click="closeOrOpenModalShowStory(story)"
@@ -81,11 +85,11 @@ body {
     padding: 20px;
 }
 .stories-container {
-    width: 100%;
+     width: 100%;
     margin: 0 auto;
-    background-color: white;
+    background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px #0000001a;
     overflow: hidden;
 }
 .stories-scroll {
@@ -162,7 +166,7 @@ body {
     margin-top: 8px;
     font-size: 12px;
     font-weight: 600;
-    color: #1c1e21;
+    color: #d1d5db;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -175,6 +179,9 @@ body {
     .story-avatar {
         width: 85px;
         height: 85px;
+    }
+    .stories-containerf {
+        display: none;
     }
 }
 </style>

@@ -43,10 +43,12 @@ const logout = () => {
         <Transition name="slide-fade">
             <NotificationCard v-if="showingNavigationCard"
         /></Transition>
-        <div class="min-h-screen bg-gray-100">
-            <nav class="border-b border-gray-100 bg-gray-900">
+        <div class="min-h-screen bg-[#111827]">
+            <nav class="border-b border-gray-700 bg-gray-900">
                 <!-- Primary Navigation Menu -->
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div
+                    class="flex items-center justify-between p-4 bg-indigo-600 dark:bg-indigo-900 text-white"
+                >
                     <div class="flex h-16 w-full justify-between">
                         <div class="flex items-center">
                             <!-- Logo -->
@@ -62,9 +64,15 @@ const logout = () => {
                             ></div>
                         </div>
 
+                        <!-- icons navbare in desktop -->
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
+                            <!-- Settings Dropdown -->
+                            <div class="ms-3 relative"></div>
+                        </div>
+                        <!-- 4 icons-->
+                        <div class="flex items-center space-x-4 max-sm:hidden">
                             <div
-                                class="me-3 relative cursor-pointer"
+                                class="me-3 relative cursor-pointer lucide lucide-message-circle w-6 h-6 block"
                                 @click="
                                     showingNavigationCard =
                                         !showingNavigationCard
@@ -85,106 +93,142 @@ const logout = () => {
                                     ></span>
                                 </span>
                                 <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
                                     viewBox="0 0 24 24"
-                                    width="20"
-                                    height="20"
-                                    class="x19dipnz x1lliihq x1tzjh5l x1k90msu x2h7rmj x1qfuztq"
-                                    fill="white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-bell w-6 h-6"
                                 >
                                     <path
-                                        d="M3 9.5a9 9 0 1 1 18 0v2.927c0 1.69.475 3.345 1.37 4.778a1.5 1.5 0 0 1-1.272 2.295h-4.625a4.5 4.5 0 0 1-8.946 0H2.902a1.5 1.5 0 0 1-1.272-2.295A9.01 9.01 0 0 0 3 12.43V9.5zm6.55 10a2.5 2.5 0 0 0 4.9 0h-4.9z"
+                                        d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"
+                                    ></path>
+                                    <path
+                                        d="M10.3 21a1.94 1.94 0 0 0 3.4 0"
                                     ></path>
                                 </svg>
                             </div>
+                            <a href="/messages">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-message-circle w-6 h-6 hidden md:block"
+                                >
+                                    <path
+                                        d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"
+                                    ></path></svg></a
+                            ><svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-grid3x3 w-6 h-6 hidden md:block"
+                            >
+                                <rect
+                                    width="18"
+                                    height="18"
+                                    x="3"
+                                    y="3"
+                                    rx="2"
+                                ></rect>
+                                <path d="M3 9h18"></path>
+                                <path d="M3 15h18"></path>
+                                <path d="M9 3v18"></path>
+                                <path d="M15 3v18"></path>
+                            </svg>
+                            <Dropdown align="right" width="48">
+                                <!-- prefive -->
+                                <template #trigger>
+                                    <button
+                                        v-if="
+                                            $page.props.jetstream
+                                                .managesProfilePhotos
+                                        "
+                                        class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition"
+                                    >
+                                        <img
+                                            class="h-8 w-8 rounded-full object-cover"
+                                            :src="
+                                                $page.props.auth.user
+                                                    .profile_photo_url
+                                            "
+                                            :alt="$page.props.auth.user.name"
+                                        />
+                                    </button>
 
-                            <!-- Settings Dropdown -->
-                            <div class="ms-3 relative">
-                                <Dropdown align="right" width="48">
-                                    <template #trigger>
+                                    <span v-else class="inline-flex rounded-md">
                                         <button
-                                            v-if="
-                                                $page.props.jetstream
-                                                    .managesProfilePhotos
-                                            "
-                                            class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition"
+                                            type="button"
+                                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150"
                                         >
-                                            <img
-                                                class="h-8 w-8 rounded-full object-cover"
-                                                :src="
-                                                    $page.props.auth.user
-                                                        .profile_photo_url
-                                                "
-                                                :alt="
-                                                    $page.props.auth.user.name
-                                                "
-                                            />
-                                        </button>
+                                            {{ $page.props.auth.user.name }}
 
-                                        <span
-                                            v-else
-                                            class="inline-flex rounded-md"
-                                        >
-                                            <button
-                                                type="button"
-                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150"
+                                            <svg
+                                                class="ms-2 -me-0.5 h-4 w-4"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke-width="1.5"
+                                                stroke="currentColor"
                                             >
-                                                {{ $page.props.auth.user.name }}
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </span>
+                                </template>
 
-                                                <svg
-                                                    class="ms-2 -me-0.5 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    stroke-width="1.5"
-                                                    stroke="currentColor"
-                                                >
-                                                    <path
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                        d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </template>
+                                <template #content>
+                                    <!-- Account Management -->
+                                    <div
+                                        class="block px-4 py-2 text-xs text-gray-400"
+                                    >
+                                        Manage Account
+                                    </div>
 
-                                    <template #content>
-                                        <!-- Account Management -->
-                                        <div
-                                            class="block px-4 py-2 text-xs text-gray-400"
-                                        >
-                                            Manage Account
-                                        </div>
+                                    <DropdownLink :href="route('profile.show')">
+                                        Profile
+                                    </DropdownLink>
 
-                                        <DropdownLink
-                                            :href="route('profile.show')"
-                                        >
-                                            Profile
+                                    <DropdownLink
+                                        v-if="
+                                            $page.props.jetstream.hasApiFeatures
+                                        "
+                                        :href="route('api-tokens.index')"
+                                    >
+                                        API Tokens
+                                    </DropdownLink>
+
+                                    <div class="border-t border-gray-200" />
+
+                                    <!-- Authentication -->
+                                    <form @submit.prevent="logout">
+                                        <DropdownLink as="button">
+                                            Log Out
                                         </DropdownLink>
-
-                                        <DropdownLink
-                                            v-if="
-                                                $page.props.jetstream
-                                                    .hasApiFeatures
-                                            "
-                                            :href="route('api-tokens.index')"
-                                        >
-                                            API Tokens
-                                        </DropdownLink>
-
-                                        <div class="border-t border-gray-200" />
-
-                                        <!-- Authentication -->
-                                        <form @submit.prevent="logout">
-                                            <DropdownLink as="button">
-                                                Log Out
-                                            </DropdownLink>
-                                        </form>
-                                    </template>
-                                </Dropdown>
-                            </div>
+                                    </form>
+                                </template>
+                            </Dropdown>
                         </div>
-
                         <!-- Hamburger -->
                         <div class="-me-2 flex items-center sm:hidden">
                             <div
@@ -208,14 +252,25 @@ const logout = () => {
                                     ></span>
                                 </span>
                                 <svg
+                                    data-v-838512c9=""
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
                                     viewBox="0 0 24 24"
-                                    width="20"
-                                    height="20"
-                                    class="x19dipnz x1lliihq x1tzjh5l x1k90msu x2h7rmj x1qfuztq"
-                                    fill="white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-bell w-6 h-6"
                                 >
                                     <path
-                                        d="M3 9.5a9 9 0 1 1 18 0v2.927c0 1.69.475 3.345 1.37 4.778a1.5 1.5 0 0 1-1.272 2.295h-4.625a4.5 4.5 0 0 1-8.946 0H2.902a1.5 1.5 0 0 1-1.272-2.295A9.01 9.01 0 0 0 3 12.43V9.5zm6.55 10a2.5 2.5 0 0 0 4.9 0h-4.9z"
+                                        data-v-838512c9=""
+                                        d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"
+                                    ></path>
+                                    <path
+                                        data-v-838512c9=""
+                                        d="M10.3 21a1.94 1.94 0 0 0 3.4 0"
                                     ></path>
                                 </svg>
                             </div>
@@ -421,7 +476,7 @@ const logout = () => {
             </nav>
 
             <!-- Page Content -->
-            <div class="lg:grid lg:grid-cols-[20%_80%] min-h-screen">
+            <div class="flex min-h-screen">
                 <sideLeft />
                 <main>
                     <slot></slot>
@@ -432,7 +487,7 @@ const logout = () => {
         <BottomNavbar />
     </div>
 </template>
-<style>
+<style scoped>
 /*
   Enter and leave animations can use different
   durations and timing functions.
@@ -449,5 +504,9 @@ const logout = () => {
 .slide-fade-leave-to {
     transform: translateX(20px);
     opacity: 0;
+}
+main {
+    max-width: 1200px;
+    margin-inline: auto;
 }
 </style>

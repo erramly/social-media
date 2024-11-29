@@ -27,30 +27,127 @@ const props = defineProps([
         <Transition name="slide-fade">
             <CreatePost v-if="isModalOpen" @close="closeModal"
         /></Transition>
-        <div class="flex min-h-screen bg-gray-100">
+        <div class="flex min-h-screen">
             <main class="flex-1 p-6 w-full">
                 <div class="2xl:grid 2xl:grid-cols-3 2xl:gap-6 w-full">
                     <div class="col-span-2 space-y-6">
-                        <storycards :user_stories="user_stories" :friend_stories="friend_stories" />
+                        <storycards
+                            :user_stories="user_stories"
+                            :friend_stories="friend_stories"
+                        />
 
-                        <div
-                            class="flex items-center w-full m-auto bg-white p-6 rounded-xl"
-                        >
-                            <img
-                                :src="user.profile_photo_url"
-                                alt="profile photo"
-                                class="w-10 h-10 rounded-full mr-4 object-cover"
-                            />
-                            <input
-                                @click="closeModal"
-                                class="flex w-full mr-4 h-10 rounded-full border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                :placeholder="
-                                    'What are you thinking ' +
-                                    $page.props.auth.user.name +
-                                    ' ?'
-                                "
-                                type="search"
-                            />
+                        <div class="w-full m-auto bg-gray-800 p-4 rounded-xl">
+                            <div class="flex gap-3 mb-3">
+                                <img
+                                    :src="user.profile_photo_url"
+                                    alt="profile photo"
+                                    class="w-10 h-10 rounded-full mr-4 object-cover"
+                                />
+                                <input
+                                    @click="closeModal"
+                                    class="w-full px-4 py-2 bg-gray-700 rounded-full text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-0"
+                                    :placeholder="
+                                        'What are you thinking ' +
+                                        $page.props.auth.user.name +
+                                        ' ?'
+                                    "
+                                    type="search"
+                                />
+                            </div>
+                            <!-- icons  -->
+                            <div
+                                class="flex justify-between border-t border-gray-700 pt-3 max-sm:flex-wrap max-sm:gap-4"
+                            >
+                                <button
+                                    class="flex items-center gap-2 text-gray-400 hover:text-gray-300 transition-colors"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="lucide lucide-smile-plus w-5 h-5"
+                                    >
+                                        <path
+                                            d="M22 11v1a10 10 0 1 1-9-10"
+                                        ></path>
+                                        <path
+                                            d="M8 14s1.5 2 4 2 4-2 4-2"
+                                        ></path>
+                                        <line
+                                            x1="9"
+                                            x2="9.01"
+                                            y1="9"
+                                            y2="9"
+                                        ></line>
+                                        <line
+                                            x1="15"
+                                            x2="15.01"
+                                            y1="9"
+                                            y2="9"
+                                        ></line>
+                                        <path d="M16 5h6"></path>
+                                        <path d="M19 2v6"></path>
+                                    </svg>
+                                    <span class="text-sm"
+                                        >Feeling/Activity</span
+                                    ></button
+                                ><button
+                                    class="flex items-center gap-2 text-gray-400 hover:text-gray-300 transition-colors"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="lucide lucide-camera w-5 h-5"
+                                    >
+                                        <path
+                                            d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"
+                                        ></path>
+                                        <circle cx="12" cy="13" r="3"></circle>
+                                    </svg>
+                                    <span class="text-sm">Photo/Video</span>
+                                </button>
+                                <button
+                                    class="flex items-center gap-2 text-gray-400 hover:text-gray-300 transition-colors max-sm:hidden"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="lucide lucide-video w-5 h-5"
+                                    >
+                                        <path
+                                            d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"
+                                        ></path>
+                                        <rect
+                                            x="2"
+                                            y="6"
+                                            width="14"
+                                            height="12"
+                                            rx="2"
+                                        ></rect>
+                                    </svg>
+                                    <span class="text-sm">Stories</span>
+                                </button>
+                            </div>
                             <!--=================================================================================================================================================================================================================================================================================================================================================================================-->
                         </div>
                         <div style="margin-bottom: 3rem">

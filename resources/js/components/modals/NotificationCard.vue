@@ -98,7 +98,7 @@ body {
     position: absolute;
     z-index: 99999;
     width: 80%;
-    top: 50px;
+    top: 70px;
     right: 5%;
     max-width: 400px;
 }

@@ -32,10 +32,14 @@ const sendToFriendRequest = (friend_id) => {
                     />
                 </span>
                 <div>
-                    <p class="font-bold truncate">
+                    <p
+                        class="font-bold overflow-hidden w-[200px] truncate whitespace-nowrap"
+                    >
                         {{ recommend.name }}
                     </p>
-                    <p class="text-sm text-gray-500 truncate">
+                    <p
+                        class="text-sm overflow-hidden w-[200px] text-gray-500 truncate whitespace-nowrap"
+                    >
                         {{ recommend.email }}
                     </p>
                 </div>

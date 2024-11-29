@@ -4,24 +4,33 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Access\AuthorizationException;
+use Laravel\Fortify\Http\Requests\VerifyEmailRequest;
+use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 
 class VerificationController extends Controller
 {
-    public function verify(Request $request)
+    public function __invoke(Request $request, $id, $hash)
     {
-        $user = User::findOrFail($request->route('id'));
 
-        if (! hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
-            throw new AuthorizationException;
+        $user = User::findOrFail($id);
+
+        if (! hash_equals($hash, sha1($user->getEmailForVerification()))) {
+            abort(403, 'Invalid verification link.');
         }
 
         if ($user->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Email already verified.'], 400);
+            return redirect('/')->with('status', 'Email already verified!');
         }
 
+        // إذا لم يتم التحقق مسبقًا، قم بتحديث الحالة
         $user->markEmailAsVerified();
 
-        return response()->json(['message' => 'Email verified successfully.']);
+        // إطلاق حدث التحقق
+        event(new Verified($user));
+
+        // إعادة التوجيه بعد النجاح
+        return redirect('/')->with('status', 'Email verified successfully!');
     }
 }

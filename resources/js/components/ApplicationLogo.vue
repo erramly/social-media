@@ -20,7 +20,7 @@
                 <path d="M2 21h12c4.4 0 8-3.6 8-8V7a2 2 0 1 0-4 0v6"></path>
                 <path d="M18 3 19.1 5.2"></path>
                 <path d="M22 3 20.9 5.2"></path></svg
-            ><span class="text-xl font-bold">slothui</span>
+            ><span class="text-xl font-bold">glovirop</span>
         </div>
     </div>
 </template>

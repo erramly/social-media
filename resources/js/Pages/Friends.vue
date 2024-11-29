@@ -12,6 +12,8 @@ const props = defineProps([
 
 const { acceptFriendRequest, sendToFriendRequest } = useFriendRequest();
 
+console.log(props.friends_request);
+
 const handleAcceptFriend = (friend_id, status) => {
     acceptFriendRequest(friend_id, status);
 };
@@ -24,7 +26,7 @@ const handlesendToFriend = (friend_id) => {
 
 <template>
     <AppLayout>
-        <div class="container">
+        <!-- <div class="container">
             <h1>your frinds</h1>
             <div class="recommendations">
                 <div
@@ -153,7 +155,183 @@ const handlesendToFriend = (friend_id) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
+
+        <main class="flex-1 p-8">
+            <!-- friends -->
+            <div>
+                <h1
+                    class="text-left text-2xl font-bold text-gray-900 dark:text-white mb-8"
+                >
+                    your frinds
+                </h1>
+                <div class="flex gap-6 flex-wrap">
+                    <div
+                        v-for="(friend, index) in userFriends"
+                        :key="index"
+                        class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 flex flex-col items-center w-[300px]"
+                    >
+                        <div
+                            class="w-full aspect-square rounded-xl bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center mb-4 overflow-hidden"
+                        >
+                            <img
+                                alt="Profile Picture"
+                                class="w-full"
+                                referrerpolicy="origin-when-cross-origin"
+                                :src="friend.profile_photo_url"
+                            />
+                        </div>
+                        <div class="text-center w-full">
+                            <h3
+                                class="text-lg font-semibold text-gray-900 dark:text-white mb-1"
+                            >
+                                {{ friend.name }}
+                            </h3>
+                            <p
+                                class="text-sm text-gray-500 dark:text-gray-400 mb-4"
+                            >
+                                {{ friend.email }}
+                            </p>
+                            <a
+                                :href="'/messages/' + friend.id"
+                                class="button-group"
+                            >
+                                <button
+                                    class="w-full bg-indigo-600 dark:bg-indigo-700 text-white py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+                                >
+                                    <span>message</span
+                                    ><svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="lucide lucide-message-circle w-4 h-4"
+                                    >
+                                        <path
+                                            d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"
+                                        ></path>
+                                    </svg></button
+                            ></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- friends request  -->
+            <div class="mt-16">
+                <h1
+                    class="text-left text-2xl font-bold text-gray-900 dark:text-white mb-8"
+                >
+                    friends request
+                </h1>
+                <div class="flex gap-6 flex-wrap">
+                    <div
+                        v-for="(friend, index) in friends_request"
+                        :key="index"
+                        class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 flex flex-col items-center w-[300px]"
+                    >
+                        <div
+                            class="w-full aspect-square rounded-xl bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center mb-4 overflow-hidden"
+                        >
+                            <img
+                                alt="Profile Picture"
+                                class="w-full"
+                                referrerpolicy="origin-when-cross-origin"
+                                :src="friend.info_friend.profile_photo_url"
+                            />
+                        </div>
+                        <div class="text-center w-full">
+                            <h3
+                                class="text-lg font-semibold text-gray-900 dark:text-white mb-1"
+                            >
+                                {{ friend.info_friend.name }}
+                            </h3>
+                            <p
+                                class="text-sm text-gray-500 dark:text-gray-400 mb-4"
+                            >
+                                {{ friend.info_friend.email }}
+                            </p>
+                            <div class="button-group">
+                                <button
+                                    @click="
+                                        handleAcceptFriend(
+                                            friend.info_friend.id,
+                                            'accepted'
+                                        )
+                                    "
+                                    class="w-full bg-indigo-600 dark:bg-indigo-700 text-white py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+                                >
+                                    <span>accept</span>
+                                </button>
+                            </div>
+                            <div class="button-group mt-3">
+                                <button
+                                    @click="
+                                        handleAcceptFriend(
+                                            friend.info_friend.id,
+                                            'declined'
+                                        )
+                                    "
+                                    class="w-full bg-gray-600 dark:bg-gray-700 text-white py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+                                >
+                                    <span>rejected</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- friends Recommend  -->
+            <div class="mt-16">
+                <h1
+                    class="text-left text-2xl font-bold text-gray-900 dark:text-white mb-8"
+                >
+                    friends Recommend
+                </h1>
+                <div class="flex gap-6 flex-wrap">
+                    <div
+                        v-for="(friend, index) in friendsRecommend"
+                        :key="index"
+                        class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 flex flex-col items-center w-[300px]"
+                    >
+                        <div
+                            class="w-full aspect-square rounded-xl bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center mb-4 overflow-hidden"
+                        >
+                            <img
+                                alt="Profile Picture"
+                                class="w-full"
+                                referrerpolicy="origin-when-cross-origin"
+                                :src="friend.profile_photo_url"
+                            />
+                        </div>
+                        <div class="text-center w-full">
+                            <h3
+                                class="text-lg font-semibold text-gray-900 dark:text-white mb-1"
+                            >
+                                {{ friend.name }}
+                            </h3>
+                            <p
+                                class="text-sm text-gray-500 dark:text-gray-400 mb-4"
+                            >
+                                {{ friend.email }}
+                            </p>
+                            <div class="button-group">
+                                <button
+                                    @click="handlesendToFriend(friend.id)"
+                                    class="w-full bg-indigo-600 dark:bg-indigo-700 text-white py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+                                >
+                                    <span>send</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </AppLayout>
 </template>
 <style scoped>
@@ -169,7 +347,7 @@ body {
     padding: 20px;
 }
 h1 {
-    text-align: center;
+    text-transform: uppercase;
     margin-bottom: 30px;
     font-size: 2rem;
     font-weight: bold;

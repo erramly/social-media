@@ -58,7 +58,7 @@ const now = computed(() => Date.now());
         class="fixed z-[99999] bg-[#333333bd] inset-0 flex justify-center items-center"
     >
         <div
-            class="fixed bg-white mi-auto rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-2xl"
+            class="fixed bg-white mi-auto rounded-lg border bg-card text-card-foreground shadow-sm lg:w-[40%] max-w-2xl"
             data-v0-t="card"
         >
             <div class="flex flex-col space-y-1.5 p-6">
@@ -86,35 +86,11 @@ const now = computed(() => Date.now());
                 <div class="grid gap-4">
                     <img
                         ref="imgPreview"
-                        width="800"
-                        height="450"
+                        height="250"
                         alt="Post Image"
-                        class="aspect-video rounded-md object-cover"
+                        class="aspect-video rounded-md object-cover w-[300px] m-auto"
                         src="https://v0.dev/placeholder.svg"
                     />
-                    <div class="space-y-2">
-                        <input
-                            v-model="form.title"
-                            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-sm font-bold"
-                            placeholder="Add a title..."
-                        />
-                        <textarea
-                            v-model="form.content"
-                            class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-sm leading-relaxed"
-                            placeholder="Write your post content here..."
-                            rows="4"
-                        ></textarea>
-                    </div>
-                </div>
-                <h1
-                    class="text-red-700 mt-4 bg-red-200 p-4 rounded-md"
-                    v-if="showError"
-                >
-                    {{ showError }}
-                </h1>
-            </div>
-            <div class="p-6 flex items-center justify-between">
-                <div class="flex items-center gap-2">
                     <button
                         class="border-inherit border-solid border-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
                         @click="activeinpute()"
@@ -146,6 +122,23 @@ const now = computed(() => Date.now());
                         </svg>
                         <span class="sr-only">Add Image</span>
                     </button>
+                    <div class="space-y-2">
+                        <input
+                            v-model="form.title"
+                            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-sm font-bold"
+                            placeholder="Add a title..."
+                        />
+                        <textarea
+                            v-model="form.content"
+                            class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-sm leading-relaxed"
+                            placeholder="Write your post content here..."
+                            rows="4"
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 flex items-center justify-between">
+                <div class="flex items-center gap-2">
                     <input
                         type="file"
                         id="fileInput"

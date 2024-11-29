@@ -8,7 +8,6 @@ const { acceptFriendRequest } = useFriendRequest();
 const handleAcceptFriend = (friend_id, status) => {
     acceptFriendRequest(friend_id, status);
 };
-
 </script>
 
 <template>
@@ -36,10 +35,14 @@ const handleAcceptFriend = (friend_id, status) => {
                         />
                     </span>
                     <div>
-                        <p class="font-bold truncate">
+                        <p
+                            class="font-bold truncate w-[100px] truncate whitespace-nowrap"
+                        >
                             {{ friend_request.info_friend.name }}
                         </p>
-                        <p class="text-sm text-gray-500 truncate w-[80%]">
+                        <p
+                            class="text-sm text-gray-500 truncate w-[100px] truncate whitespace-nowrap"
+                        >
                             {{ friend_request.info_friend.email }}
                         </p>
                     </div>
@@ -47,7 +50,7 @@ const handleAcceptFriend = (friend_id, status) => {
                 <!--two button-->
                 <div class="flex items-center justify-center gap-4">
                     <button
-                        class="button decline text-black bg-[#e4e6eb] inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                        class="button decline text-black bg-[#e4e6eb] inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-2 py-2"
                         @click="
                             handleAcceptFriend(
                                 friend_request.info_friend.id,
@@ -58,7 +61,7 @@ const handleAcceptFriend = (friend_id, status) => {
                         Declined
                     </button>
                     <button
-                        class="bg-blue-600 text-white inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                        class="bg-blue-600 text-white inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-2 py-2"
                         @click="
                             acceptFriendRequest(
                                 friend_request.info_friend.id,

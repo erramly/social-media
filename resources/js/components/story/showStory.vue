@@ -13,15 +13,9 @@ const close = () => {
         class="fixed z-[99999] bg-[#333333bd] inset-0 flex justify-center items-center"
     >
         <div
-            class="bg-story fixed h-full my-6 rounded-lg bg-white left-[50%] top-[50%] z-50 grid w-[80%] max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:max-w-[425px]"
+            class="bg-story fixed h-[90%] my-6 rounded-lg bg-white left-[50%] top-[50%] z-50 grid w-[80%] max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:max-w-[425px]"
             data-id="36"
         >
-            <!--story image-->
-            <div
-                class="bg-story flex items-center space-x-6 justify-center my-8"
-            >
-                <img :src="story" alt="story image object-cover	" />
-            </div>
             <button
                 @click="close()"
                 type="button"
@@ -32,7 +26,7 @@ const close = () => {
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"
-                    fill="none"
+                    fill="#fff"
                     stroke="currentColor"
                     stroke-width="2"
                     stroke-linecap="round"
@@ -44,6 +38,16 @@ const close = () => {
                 </svg>
                 <span class="sr-only">Close</span>
             </button>
+            <!--story image-->
+            <div
+                class="bg-story flex items-center space-x-6 justify-center my-8"
+            >
+                <img
+                    :src="story"
+                    alt="story image"
+                    class="object-cover h-full w-full"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -181,9 +185,11 @@ const close = () => {
 }
 
 .bg-story {
-    background-image: linear-gradient(#fff, #fff),
-        linear-gradient(to right, #00c6ff 0%, #0072ff 100%);
-    background-origin: border-box;
+    background-color: #333;
     background-clip: content-box, border-box;
+}
+svg {
+    color: white;
+    font-size: 2rem;
 }
 </style>

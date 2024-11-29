@@ -2,13 +2,14 @@
 import { Link } from "@inertiajs/vue3";
 </script>
 <template>
-    <div>
+    <!-- <div>
         <div
             class="bg-white rounded-t-lg shadow-lg shadow-cyan-500/50 fixed left-0 right-0 bottom-0 lg:hidden border-[1px] border-[#1d4ed8]"
         >
             <div class="flex">
                 <div class="flex-1 group">
                     <Link
+                       href=""
                         href="/"
                         class="flex items-end justify-center text-center mx-auto px-4 pt-2 w-full text-gray-400 group-hover:text-indigo-500"
                     >
@@ -59,7 +60,7 @@ import { Link } from "@inertiajs/vue3";
                     </Link>
                 </div>
                 <div class="flex-1 group">
-                    <a
+                    <Link
                         href="/messages"
                         class="flex items-end justify-center text-center mx-auto px-4 pt-2 w-full text-gray-400 group-hover:text-indigo-500"
                     >
@@ -89,7 +90,7 @@ import { Link } from "@inertiajs/vue3";
                                 class="block w-5 mx-auto h-1 group-hover:bg-indigo-500 rounded-full"
                             ></span>
                         </span>
-                    </a>
+                    </Link>
                 </div>
                 <div class="flex-1 group">
                     <Link
@@ -123,5 +124,111 @@ import { Link } from "@inertiajs/vue3";
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
+    <nav
+        class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 md:hidden"
+    >
+        <div class="flex justify-around items-center py-2">
+            <Link
+                href="/"
+                class="flex flex-col items-center text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+                ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-home w-6 h-6"
+                >
+                    <path
+                        d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+                    ></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline></svg
+                ><span class="text-xs mt-1">Home</span></Link
+            ><Link
+                href="/friend-page"
+                class="flex flex-col items-center text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+                ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-users w-6 h-6"
+                >
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg
+                ><span class="text-xs mt-1">Friends</span></Link
+            ><Link
+                href=""
+                class="flex flex-col items-center text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+                ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-shopping-bag w-6 h-6"
+                >
+                    <path
+                        d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"
+                    ></path>
+                    <path d="M3 6h18"></path>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path></svg
+                ><span class="text-xs mt-1">Market</span></Link
+            ><a
+                href="messages"
+                class="flex flex-col items-center text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+                ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-message-square w-6 h-6"
+                >
+                    <path
+                        d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                    ></path></svg
+                ><span class="text-xs mt-1">Messages</span></a
+            ><Link
+                href="/user/profile"
+                class="flex flex-col items-center text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+                ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-menu w-6 h-6"
+                >
+                    <line x1="4" x2="20" y1="12" y2="12"></line>
+                    <line x1="4" x2="20" y1="6" y2="6"></line>
+                    <line x1="4" x2="20" y1="18" y2="18"></line></svg
+                ><span class="text-xs mt-1">Menu</span></Link
+            >
+        </div>
+    </nav>
 </template>
